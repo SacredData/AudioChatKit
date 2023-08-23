@@ -102,4 +102,15 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     private func configurePlaybackSession() throws {
         try IOSNowPlayableBehavior().handleNowPlayableSessionStart()
     }
+    
+    private func endPlaybackSession() {
+        IOSNowPlayableBehavior().handleNowPlayableSessionEnd()
+    }
+    
+    // TODO:
+    /*
+    private func changeNowPlayingItem() {
+        IOSNowPlayableBehavior().handleNowPlayableItemChange(metadata: NowPlayableStaticMetadata(assetURL: <#T##URL#>, mediaType: <#T##MPNowPlayingInfoMediaType#>, isLiveStream: <#T##Bool#>, title: <#T##String#>, artist: <#T##String?#>, artwork: <#T##MPMediaItemArtwork?#>, albumArtist: <#T##String?#>, albumTitle: <#T##String?#>))
+    }
+    */
 }
