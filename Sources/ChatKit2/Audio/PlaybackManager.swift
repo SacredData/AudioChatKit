@@ -16,7 +16,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     var player: AudioKit.AudioPlayer
     var session: AVAudioSession
     
-    var playbackState: HandsFreeState.PlaybackState {
+    var playbackState: PlaybackState {
         didSet {
             // TODO: Handle changes in playback state
             switch playbackState {
@@ -67,7 +67,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
             startPlaybackAudioEngine()
             try player.load(file: file, buffered: true)
             if player.isBuffered {
-                playbackState = HandsFreeState.PlaybackState.isReady(player.file)
+                playbackState = PlaybackState.isReady(player.file)
             }
         }
     }
@@ -81,7 +81,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
                 .isReady(let aVAudioFile):
             player.play()
             if player.isPlaying {
-                playbackState = HandsFreeState.PlaybackState.isPlaying(player.file)
+                playbackState = PlaybackState.isPlaying(player.file)
             }
         default:
             break
@@ -93,6 +93,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
             try configurePlaybackSession()
             if !engine.avEngine.isRunning {
                 try engine.start()
+            }
         } catch {
             return
         }
@@ -100,6 +101,5 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     
     private func configurePlaybackSession() throws {
         try IOSNowPlayableBehavior().handleNowPlayableSessionStart()
-        logCurrentSessionInfo()
     }
 }
