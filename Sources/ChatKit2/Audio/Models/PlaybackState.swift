@@ -1,6 +1,7 @@
 import AVFoundation
 
 enum PlaybackState {
+    case isInitializing
     case isWaiting
     case isScheduling(AVAudioFile?)
     case isBuffering(AVAudioFile?)
