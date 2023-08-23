@@ -5,8 +5,8 @@
 //  Created by Andrew Grathwohl on 8/9/23.
 //
 
+import AudioKit
 import AVFoundation
-import Combine
 import MediaPlayer
 
 
@@ -130,7 +130,6 @@ final class FeedPlaylist: ObservableObject {
                               fileStartTime: segmentIndex == 0 ? referenceTimestamp : 0.0,
                               fileEndTime: audioFiles[segmentIndex].duration,
                               completionHandler: {
-                                Logger.log("Completed playback of Audio Message #\(trackNumber): \(self.uploadIds[segmentIndex])")
                               },
                               teamName: teamName,
                               accountId: accountId,
