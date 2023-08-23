@@ -165,3 +165,19 @@ final class FeedPlaylist: ObservableObject {
         var segmentProgress: Float // relativeTimestamp / segment.audioFile.duration
     }
 }
+
+public struct segment: StreamableAudioSegment {
+  public var audioFile: AVAudioFile
+  public var playbackStartTime: TimeInterval
+  public var fileStartTime: TimeInterval
+  public var fileEndTime: TimeInterval
+  public var completionHandler: AVAudioNodeCompletionHandler?
+  public var audioCreator: String?
+  public var teamName: String?
+  public var accountId: String?
+  public var feedId: String?
+  public var feedItemId: String?
+  public var transcript: String?
+  public var mediaItem: [String: Any]?
+  public var nowPlayingInfo: [String: Any]?
+}
