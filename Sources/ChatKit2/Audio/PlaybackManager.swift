@@ -20,6 +20,8 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         didSet {
             // TODO: Handle changes in playback state
             switch playbackState {
+            case .isStopped:
+                endPlaybackSession()
             case .isReady:
                 playMessage()
             default:
