@@ -23,23 +23,8 @@ class AudioConfigHelper: ObservableObject {
         }
     }
     
-    private func initializeAudioKit() {
-        var formatSettings = AudioKit.Settings.audioFormat.settings
-        formatSettings[AVSampleRateKey] = 48000
-        formatSettings[AVLinearPCMBitDepthKey] = 32
-        formatSettings[AVLinearPCMIsFloatKey] = true
-        
-        AudioKit.Settings.enableLogging = true
-        AudioKit.Settings.bufferLength = .short
-        AudioKit.Settings.fixTruncatedRecordings = true
-        AudioKit.Settings.audioFormat = AVAudioFormat(settings: formatSettings)!
-    }
-    
-    /// Default config for audio session will be long-form spoken audio playback
-    private func setupDefaultSession() throws {
-        let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
-        sessionPreferencesAreValid = validateAudioSessionPreferences(audioSession: audioSession)
+    func setRecordSession() throws {
+        try AVAudioSession.sharedInstance().setCategory(.record, mode: .default)
     }
     
     func validateAudioFormatForRecording(audioFormat: AVAudioFormat) {
@@ -61,5 +46,24 @@ class AudioConfigHelper: ObservableObject {
         let prefersCorrectInputChannels = audioSession.preferredInputNumberOfChannels == AudioFormats.record!.channelCount
         let prefersCorrectOutputChannels = audioSession.preferredOutputNumberOfChannels == AudioFormats.global!.channelCount
         return [prefersCorrectSampleRate, prefersCorrectInputChannels, prefersCorrectOutputChannels].allSatisfy({$0 == true})
+    }
+    
+    private func initializeAudioKit() {
+        var formatSettings = AudioKit.Settings.audioFormat.settings
+        formatSettings[AVSampleRateKey] = 48000
+        formatSettings[AVLinearPCMBitDepthKey] = 32
+        formatSettings[AVLinearPCMIsFloatKey] = true
+        
+        AudioKit.Settings.enableLogging = true
+        AudioKit.Settings.bufferLength = .short
+        AudioKit.Settings.fixTruncatedRecordings = true
+        AudioKit.Settings.audioFormat = AVAudioFormat(settings: formatSettings)!
+    }
+    
+    /// Default config for audio session will be long-form spoken audio playback
+    private func setupDefaultSession() throws {
+        let audioSession = AVAudioSession.sharedInstance()
+        try audioSession.setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
+        sessionPreferencesAreValid = validateAudioSessionPreferences(audioSession: audioSession)
     }
 }
