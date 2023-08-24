@@ -9,6 +9,7 @@ import AudioKit
 import AVFoundation
 
 class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
+    private var audioEngineManager: AudioEngineManager = .shared
     static var shared: PlaybackManager = PlaybackManager()
     
     var engine: AudioKit.AudioEngine
@@ -69,8 +70,8 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         // Check the AudioKit settings and modify them if needed
         player = AudioPlayer()
         mixer = Mixer()
-        engine = AudioEngine()
-        session = AudioKit.Settings.session
+        engine = audioEngineManager.engine
+        session = audioEngineManager.session
         
         mixer.addInput(player)
         engine.output = mixer

@@ -15,13 +15,16 @@ import AVFoundation
 /// in addition to facilitating necessary changes in session configuration, node
 /// properties, and session interruptions.
 class AudioEngineManager: ObservableObject, HasAudioEngine {
+    static var shared: AudioEngineManager = AudioEngineManager()
+
     private var playback: PlaybackManager = .shared
 
     let player: AudioPlayer
-    let engine: AudioEngine = AudioEngine()
+    let engine: AudioEngine
     let session: AVAudioSession = AVAudioSession.sharedInstance()
     
-    private init() {
+    public init() {
+        engine = AudioEngine()
         player = playback.player
     }
 }
