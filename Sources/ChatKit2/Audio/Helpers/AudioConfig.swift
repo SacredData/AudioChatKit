@@ -55,6 +55,6 @@ class AudioConfigHelper: ObservableObject {
         let prefersCorrectSampleRate = audioSession.preferredSampleRate == AudioFormats.global?.sampleRate
         let prefersCorrectInputChannels = audioSession.preferredInputNumberOfChannels == AudioFormats.record!.channelCount
         let prefersCorrectOutputChannels = audioSession.preferredOutputNumberOfChannels == AudioFormats.global!.channelCount
-        return [prefersCorrectSampleRate, prefersCorrectInputChannels].allSatisfy({$0 == true})
+        return [prefersCorrectSampleRate, prefersCorrectInputChannels, prefersCorrectOutputChannels].allSatisfy({$0 == true})
     }
 }
