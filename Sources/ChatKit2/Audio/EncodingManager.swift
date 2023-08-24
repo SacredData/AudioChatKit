@@ -7,6 +7,8 @@
 
 import AudioKit
 import AVFoundation
+import Opus
+import SwiftOGG
 
 class EncodingManager: ObservableObject {
     let bitrate: Int = FormatConverterSettings.bitrate
@@ -14,6 +16,7 @@ class EncodingManager: ObservableObject {
     let channelCount: Int = FormatConverterSettings.channels
     let audioCodec: String = FormatConverterSettings.format
 
+    var opusEncoder: Opus.Encoder?
     let outputDirectory: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 
     /// Produces a mono M4A-contained AAC audio file from a mono Float32 48kHz PCM source
@@ -36,11 +39,31 @@ class EncodingManager: ObservableObject {
         return outputURL
     }
 
+    /// Produces a mono OGG-contained Opus audio file from a mono Float32 48kHz PCM source
+    func encodeToOpus(at inputURL: URL) throws -> URL {
+        let outputURL = outputDirectory.appendingPathComponent("\(inputURL.lastPathComponent).converted.opus")
+        let srcURL = encodeToM4A(at: inputURL)
+        try OGGConverter.convertM4aFileToOpusOGG(src: srcURL, dest: outputURL)
+        return outputURL
+    }
+
+    /* TODO: Figure out what is going wrong with the floats operation
     /// Produces an opus packet from a series of PCM float values
     /// Assumes a 48kHz sampling rate, mono channel layout, and 32bit depth
-    func encodeFloatsToOpusPacket(floats: [Float]) {
-        // TODO: audiobuffer from [Float]
+    func encodeFloatsToOpusPacket(floats: [Float]) throws {
         // TODO: instantiate class instance of Opus.Encoder
+        try instantiateOpusEncoder()
+        // TODO: audiobuffer from [Float]
+        try floats.withUnsafeMutableBufferPointer { bytes in
+            let audioBuffer = AudioBuffer(mNumberChannels: 1, mDataByteSize: UInt32(bytes.count * MemoryLayout<Float>.size), mData: bytes.baseAddress)
+            var bufferList = AudioBufferList(mNumberBuffers: 1, mBuffers: audioBuffer)
+            let outputAudioBuffer = AVAudioPCMBuffer(pcmFormat: AudioFormats.record?.commonFormat, bufferListNoCopy: &bufferList)!
+        }
         // TODO: audiobuffer -> opus packet
+    }
+     */
+
+    private func instantiateOpusEncoder() throws {
+        opusEncoder = try Opus.Encoder(format: AudioFormats.record!)
     }
 }
