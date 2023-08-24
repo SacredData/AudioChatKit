@@ -27,6 +27,7 @@ final class Message: ObservableObject {
     let duration: TimeInterval
     let feedId: String
     let teamName: String
+    let title: String
     let uploadId: String
     
     var transcript: Transcript? {
@@ -37,14 +38,21 @@ final class Message: ObservableObject {
     var translations: [Translation] = []
     var spokenLanguage: String?
     var usersListened: [String] = []
-    init(audioFile: AVAudioFile, author: String="", date: String="", feedId: String="", teamName: String="") {
+
+    var staticMetadata: NowPlayableStaticMetadata?
+    var dynamicMetadata: NowPlayableDynamicMetadata?
+
+    init(audioFile: AVAudioFile, author: String="", date: String="", feedId: String="", teamName: String="", title: String="") {
         self.audioFile = audioFile
         self.author = author
         self.date = ISO8601DateFormatter().date(from: date) ?? Date()
         self.duration = audioFile.duration
         self.feedId = feedId
         self.teamName = teamName
+        self.title = title
         self.uploadId = audioFile.url.lastPathComponent.replacingOccurrences(of: ".caf", with: "")
+        // TODO: Put artwork property into the static metadata
+        self.staticMetadata = NowPlayableStaticMetadata(assetURL: self.audioFile.url, mediaType: .audio, isLiveStream: false, title: title, artist: author, artwork: nil, albumArtist: author, albumTitle: teamName)
     }
     /// Attach the `Transcript` belonging to this message
     /// This also sets the message's spoken language property
@@ -59,4 +67,8 @@ final class Message: ObservableObject {
     func setUsersListened(accountIds: [String]) {
         usersListened.append(contentsOf: accountIds)
     }
+    // TODO: Enable period updates to progress, time elapsed, etc.
+//    func updateDynamicMetadata() {
+//
+//    }
 }
