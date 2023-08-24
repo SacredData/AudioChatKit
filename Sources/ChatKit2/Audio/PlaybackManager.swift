@@ -97,6 +97,11 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         }
         
         player.completionHandler = playbackCompletionHandler
+        
+        // TODO: Finish the player tap and increment time elapsed in handler
+        let playerTap = RawDataTap2.init(player, handler: {floats in
+            Log(floats)
+        })
     }
     
     func newLocalMessage(file: AVAudioFile) throws {
