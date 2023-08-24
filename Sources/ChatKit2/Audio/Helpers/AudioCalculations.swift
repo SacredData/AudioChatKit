@@ -38,4 +38,8 @@ class AudioCalculations: ObservableObject {
             self.dbArray.append(CGFloat(self.dbFloatsUI[2]))
         }
     }
+    
+    func getPeak(audioBuffer: AVAudioPCMBuffer) -> AVAudioPCMBuffer.Peak {
+        return audioBuffer.peak()!
+    }
 }
