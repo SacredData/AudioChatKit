@@ -16,6 +16,11 @@ class AudioConfigHelper: ObservableObject {
 
     private init() {
         initializeAudioKit()
+        do {
+            try setupDefaultSession()
+        } catch {
+            fatalError("\(error)")
+        }
     }
     
     private func initializeAudioKit() {
