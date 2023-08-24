@@ -30,9 +30,9 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "ChatKit2",
-            dependencies: ["AudioKit",
-                           .product(name: "Opus", package: "swift-opus"),
-                           .product(name: "SwiftOGG", package: "swift-ogg")
+            dependencies: ["AudioKit", // for almost all the audio stuff
+                           .product(name: "Opus", package: "swift-opus"), // for pcm -> opus packet encoding
+                           .product(name: "SwiftOGG", package: "swift-ogg") // for conversion from m4a -> opus
             ]),
         .testTarget(
             name: "ChatKit2Tests",
