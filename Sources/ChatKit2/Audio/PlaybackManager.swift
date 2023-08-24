@@ -69,6 +69,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     
     // The pending audio messages to play when player is freed up
     var messageQueue: [AVAudioFile] = []
+    var messageCompletions: [Message] = []
     
     private init() {
         // Ensure we get AudioKit settings

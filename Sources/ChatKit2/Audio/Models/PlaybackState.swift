@@ -1,5 +1,6 @@
 import AVFoundation
 
+// TODO: Replace AVAudioFile with our Message struct
 enum PlaybackState {
     case isInitializing
     case isWaiting
