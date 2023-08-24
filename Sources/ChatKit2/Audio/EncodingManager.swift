@@ -15,8 +15,9 @@ class EncodingManager: ObservableObject {
     let audioCodec: String = FormatConverterSettings.format
 
     let outputDirectory: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    
-    func encodeToM4A(at inputURL: URL, for accountId: String="", in teamId: String="") -> URL {
+
+    /// Produces a mono M4A-contained AAC audio file from a mono Float32 48kHz PCM source
+    func encodeToM4A(at inputURL: URL) -> URL {
         let outputURL = outputDirectory.appendingPathComponent("\(inputURL.lastPathComponent).converted.m4a")
         var options = FormatConverter.Options()
         options.format = AudioFileFormat(rawValue:audioCodec)
@@ -31,7 +32,7 @@ class EncodingManager: ObservableObject {
                 fatalError("\(error)")
             }
         }
-        
+
         return outputURL
     }
 }
