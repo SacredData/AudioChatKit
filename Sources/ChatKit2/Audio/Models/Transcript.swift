@@ -7,6 +7,8 @@
 
 import MediaPlayer
 
+/// A model of the transcript of the original spoken audio in the message.
+/// Attaching this to a `Message` also sets that message's spoken language.
 final class Transcript: ObservableObject {
     let text: String
     let languageOption: MPNowPlayingInfoLanguageOption
@@ -24,6 +26,7 @@ final class Transcript: ObservableObject {
     }
 }
 
+/// Any additional translations of the original `Transcript` attached to a `Message`
 final class Translation: ObservableObject {
     let originalTranscript: Transcript
     let languageOption: MPNowPlayingInfoLanguageOption
