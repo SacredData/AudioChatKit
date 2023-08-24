@@ -27,9 +27,9 @@ class EncodingManager: ObservableObject {
         options.sampleRate = Double(sampleRate)
         options.channels = UInt32(channelCount)
         options.bitRate = UInt32(bitrate)
-        
+        options.eraseFile = true
+
         let converter = FormatConverter(inputURL: inputURL, outputURL: outputURL, options: options)
-        
         converter.start { error in
             if let error {
                 fatalError("\(error)")
