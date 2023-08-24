@@ -35,4 +35,12 @@ class EncodingManager: ObservableObject {
 
         return outputURL
     }
+
+    /// Produces an opus packet from a series of PCM float values
+    /// Assumes a 48kHz sampling rate, mono channel layout, and 32bit depth
+    func encodeFloatsToOpusPacket(floats: [Float]) {
+        // TODO: audiobuffer from [Float]
+        // TODO: instantiate class instance of Opus.Encoder
+        // TODO: audiobuffer -> opus packet
+    }
 }
