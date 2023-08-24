@@ -7,6 +7,7 @@
 
 import AVFoundation
 
+/// Various helper methods for handling time best-practices
 final class TimeHelper: ObservableObject {
     
     /// Returns a well-formatted MM:ss string from a given `TimeInterval`
@@ -19,5 +20,12 @@ final class TimeHelper: ObservableObject {
        
         let retTime = formatter.string(from: time)
         return retTime!
+    }
+}
+
+/// Enables TimeInterval value to be clamped from 0 ... duration of message
+private extension Comparable {
+    dynamic func clamped(to limits: ClosedRange<Self>) -> Self {
+        min(max(self, limits.lowerBound), limits.upperBound)
     }
 }
