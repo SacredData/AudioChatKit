@@ -28,7 +28,7 @@ class EncodingManager: ObservableObject {
         options.channels = UInt32(channelCount)
         options.bitRate = UInt32(bitrate)
         options.eraseFile = true
-
+        
         let converter = FormatConverter(inputURL: inputURL, outputURL: outputURL, options: options)
         converter.start { error in
             if let error {
@@ -53,11 +53,14 @@ class EncodingManager: ObservableObject {
     func encodeFloatsToOpusPacket(floats: [Float]) throws {
         // TODO: instantiate class instance of Opus.Encoder
         try instantiateOpusEncoder()
+        var data = Data(count: 0)
         // TODO: audiobuffer from [Float]
         try floats.withUnsafeMutableBufferPointer { bytes in
             let audioBuffer = AudioBuffer(mNumberChannels: 1, mDataByteSize: UInt32(bytes.count * MemoryLayout<Float>.size), mData: bytes.baseAddress)
             var bufferList = AudioBufferList(mNumberBuffers: 1, mBuffers: audioBuffer)
             let outputAudioBuffer = AVAudioPCMBuffer(pcmFormat: AudioFormats.record?.commonFormat, bufferListNoCopy: &bufferList)!
+     
+            _ = try opusEncoder.encode(outputAudioBuffer, to: &data)
         }
         // TODO: audiobuffer -> opus packet
     }
