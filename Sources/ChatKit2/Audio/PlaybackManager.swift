@@ -106,12 +106,13 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     }
     
     func newLocalMessage(file: AVAudioFile) throws {
+        let shouldBuffer = file.duration > 30
         if player.isPlaying {
             messageQueue.append(file)
         } else {
             startPlaybackAudioEngine()
-            try player.load(file: file, buffered: true)
-            if player.isBuffered {
+            try player.load(file: file, buffered: shouldBuffer)
+            if player.isBuffered || player.file == file {
                 playbackState = PlaybackState.isReady(player.file)
             }
         }
