@@ -19,7 +19,10 @@ let package = Package(
            url: "https://github.com/AudioKit/AudioKit.git",
            .upToNextMajor(from: "5.0.0")),
         .package(
-            url: "https://github.com/vector-im/swift-ogg.git",
+            url: "https://github.com/alta/swift-opus.git",
+            .upToNextMajor(from: "0.0.2")),
+        .package(
+            url:"https://github.com/vector-im/swift-ogg.git",
             .upToNextMajor(from: "0.0.1"))
     ],
     targets: [
@@ -27,7 +30,10 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "ChatKit2",
-            dependencies: ["AudioKit"]),
+            dependencies: ["AudioKit",
+                           .product(name: "Opus", package: "swift-opus"),
+                           .product(name: "SwiftOGG", package: "swift-ogg")
+            ]),
         .testTarget(
             name: "ChatKit2Tests",
             dependencies: ["ChatKit2"]),
