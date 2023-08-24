@@ -23,9 +23,3 @@ final class TimeHelper: ObservableObject {
     }
 }
 
-/// Enables TimeInterval value to be clamped from 0 ... duration of message
-private extension Comparable {
-    dynamic func clamped(to limits: ClosedRange<Self>) -> Self {
-        min(max(self, limits.lowerBound), limits.upperBound)
-    }
-}

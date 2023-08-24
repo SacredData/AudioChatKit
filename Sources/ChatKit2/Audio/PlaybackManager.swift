@@ -116,6 +116,22 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         }
     }
     
+    func seek(to time: TimeInterval) {
+        switch playbackState {
+        case .isScheduling(let aVAudioFile),
+                .isBuffering(let aVAudioFile),
+                .isPaused(let aVAudioFile),
+                .isPlaying(let aVAudioFile),
+                .isReady(let aVAudioFile),
+                .isInterrupted(let aVAudioFile):
+            // No matter what the clamped time will never be > audio duration
+            let clampedTime = time.clamped(to: 0 ... aVAudioFile!.duration)
+            player.seek(time: clampedTime)
+        default:
+            break
+        }
+    }
+    
     private func playMessage() {
         switch playbackState {
         case .isScheduling(let aVAudioFile),
@@ -161,4 +177,11 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         IOSNowPlayableBehavior().handleNowPlayableItemChange(metadata: NowPlayableStaticMetadata(assetURL: <#T##URL#>, mediaType: <#T##MPNowPlayingInfoMediaType#>, isLiveStream: <#T##Bool#>, title: <#T##String#>, artist: <#T##String?#>, artwork: <#T##MPMediaItemArtwork?#>, albumArtist: <#T##String?#>, albumTitle: <#T##String?#>))
     }
     */
+}
+
+/// Enables TimeInterval value to be clamped from 0 ... duration of message
+private extension Comparable {
+    dynamic func clamped(to limits: ClosedRange<Self>) -> Self {
+        min(max(self, limits.lowerBound), limits.upperBound)
+    }
 }
