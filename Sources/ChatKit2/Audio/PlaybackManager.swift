@@ -21,6 +21,11 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
             return player.currentTime
         }
     }
+    var currentTimeString: String? {
+        get {
+            return TimeHelper().formatDuration(duration: currentTime ?? 0.0)
+        }
+    }
     var currentPosition: Double? {
         get {
             return player.currentPosition
