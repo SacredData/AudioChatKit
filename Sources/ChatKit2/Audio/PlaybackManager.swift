@@ -15,11 +15,29 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     var mixer: AudioKit.Mixer
     var player: AudioKit.AudioPlayer
     var session: AVAudioSession
-    
+    var currentTime: TimeInterval? {
+        get {
+            return player.currentTime
+        }
+    }
+    var currentPosition: Double? {
+        get {
+            return player.currentPosition
+        }
+    }
+    var currentStatus: NodeStatus.Playback? {
+        get {
+            return player.status
+        }
+    }
     var playbackState: PlaybackState {
         didSet {
             // TODO: Handle changes in playback state
             switch playbackState {
+            case .isPaused:
+                if player.status != .paused {
+                    player.pause()
+                }
             case .isStopped:
                 if player.status != .stopped {
                     player.stop()
