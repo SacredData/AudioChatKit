@@ -13,8 +13,10 @@ final class Message: ObservableObject {
     let date: Date
     let duration: TimeInterval
     let teamName: String
-    // TODO: Add transcript model
     let uploadId: String
+    
+    var transcript: Transcript?
+    var translations: [Translation] = []
     init(audioFile: AVAudioFile, author: String="", date: String="", teamName: String="") {
         self.audioFile = audioFile
         self.author = author
@@ -22,5 +24,11 @@ final class Message: ObservableObject {
         self.duration = audioFile.duration
         self.teamName = teamName
         self.uploadId = audioFile.url.lastPathComponent.replacingOccurrences(of: ".caf", with: "")
+    }
+    func attachTranscript(transcript: Transcript) {
+        self.transcript = transcript
+    }
+    func attachTranslations(translations: [Translation]) {
+        self.translations.append(contentsOf: translations)
     }
 }
