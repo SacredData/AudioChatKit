@@ -37,7 +37,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
             return player.status
         }
     }
-    var playbackState: PlaybackState {
+    var playbackState: PlaybackState = .isInitializing {
         didSet {
             // TODO: Handle changes in playback state
             switch playbackState {
