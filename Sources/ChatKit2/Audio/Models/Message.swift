@@ -5,6 +5,19 @@
 //  Created by Andrew Grathwohl on 8/24/23.
 //
 
+/*
+ When a new message comes in, we should download the file to storage and
+ create an `AVAudioFile` from the local URL of that file. This plus the
+ other metadata in the init of this class should be used to instantiate
+ the new AudioMessage.
+ 
+ When we receive the original language transcript, be sure to init the
+ `Transcript` and attach it to this message via `attachTranscript`.
+ 
+ When we recveive translations of the original transcript into other languages,
+ be sure to `attachTranslations` as well.
+ */
+
 import AVFoundation
 
 final class Message: ObservableObject {
