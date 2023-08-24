@@ -21,5 +21,11 @@ final class TimeHelper: ObservableObject {
         let retTime = formatter.string(from: time)
         return retTime!
     }
+    
+    func audioSampleTime(audioFile: AVAudioFile) -> AVAudioTime {
+        let framePosition = audioFile.framePosition
+        let sampleRate = audioFile.fileFormat.sampleRate
+        return AVAudioTime.init(sampleTime: framePosition, atRate: sampleRate)
+    }
 }
 

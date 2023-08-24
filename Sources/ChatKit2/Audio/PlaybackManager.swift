@@ -37,6 +37,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
             return player.status
         }
     }
+    var sampleStartTime: AVAudioTime?
     var playbackState: PlaybackState = .isInitializing {
         didSet {
             // TODO: Handle changes in playback state
@@ -58,6 +59,8 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
                 playMessage()
             case .isPlaying:
                 if let file = player.file {
+                    // Our anchor AVAudioTime to use for tracking timeline progress
+                    sampleStartTime = TimeHelper().audioSampleTime(audioFile: file)
                     // Set the class's currentMessage to what player has loaded
                     currentMessage = [getUploadIdFromFile(file: file): file]
                 }
