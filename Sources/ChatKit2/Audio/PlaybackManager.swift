@@ -21,6 +21,9 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
             // TODO: Handle changes in playback state
             switch playbackState {
             case .isStopped:
+                if player.status != .stopped {
+                    player.stop()
+                }
                 endPlaybackSession()
             case .isReady:
                 playMessage()
@@ -83,7 +86,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
                 .isReady(let aVAudioFile):
             player.play()
             if player.isPlaying {
-                playbackState = PlaybackState.isPlaying(player.file)
+                playbackState = PlaybackState.isPlaying(aVAudioFile)
             }
         default:
             break
