@@ -71,7 +71,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     }
     
     // The pending audio messages to play when player is freed up
-    var messageQueue: [AVAudioFile] = []
+    var messageQueue: [Message] = []
     var messageCompletions: [Message] = []
     
     private init() {
@@ -93,7 +93,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
                 // We need to pop the next message from the queue and play
                 let nextMessage = self.messageQueue.removeFirst()
                 // TODO: React to this change in state and begin to load and buffer the message
-                self.playbackState = PlaybackState.isBuffering(nextMessage)
+                self.playbackState = PlaybackState.isBuffering(nextMessage.audioFile)
             } else {
                 // We ain't got nothin' so lets just sit there and wait
                 self.playbackState = PlaybackState.isWaiting
@@ -103,19 +103,19 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         player.completionHandler = playbackCompletionHandler
         
         // TODO: Finish the player tap and increment time elapsed in handler
-        let playerTap = RawDataTap2.init(player, handler: {floats in
+        _ = RawDataTap2.init(player, handler: {floats in
             Log(floats)
         })
     }
     
-    func newLocalMessage(file: AVAudioFile) throws {
-        let shouldBuffer = file.duration > 30
+    func newLocalMessage(msg: Message) throws {
+        let shouldBuffer = msg.audioFile.duration > 30
         if player.isPlaying {
-            messageQueue.append(file)
+            messageQueue.append(msg)
         } else {
             startPlaybackAudioEngine()
-            try player.load(file: file, buffered: shouldBuffer)
-            if player.isBuffered || player.file == file {
+            try player.load(file: msg.audioFile, buffered: shouldBuffer)
+            if player.isBuffered || player.file == msg.audioFile {
                 playbackState = PlaybackState.isReady(player.file)
             }
         }
