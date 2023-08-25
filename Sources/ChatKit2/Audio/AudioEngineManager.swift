@@ -14,14 +14,14 @@ import AVFoundation
 /// app signal flow. It will play host to the playback and recording managers,
 /// in addition to facilitating necessary changes in session configuration, node
 /// properties, and session interruptions.
-class AudioEngineManager: ObservableObject, HasAudioEngine {
+public class AudioEngineManager: ObservableObject, HasAudioEngine {
     static var shared: AudioEngineManager = AudioEngineManager()
 
     private var audioConfig: AudioConfigHelper = .shared
     private var playback: PlaybackManager = .shared
 
     let player: AudioPlayer
-    let engine: AudioEngine
+    public let engine: AudioEngine
     let session: AVAudioSession = AVAudioSession.sharedInstance()
     let outputMixer: AVAudioMixerNode
 

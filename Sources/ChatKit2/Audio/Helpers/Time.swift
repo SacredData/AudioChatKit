@@ -8,10 +8,10 @@
 import AVFoundation
 
 /// Various helper methods for handling time best-practices
-final class TimeHelper: ObservableObject {
+public final class TimeHelper: ObservableObject {
     
     /// Returns a well-formatted MM:ss string from a given `TimeInterval`
-    func formatDuration(duration: TimeInterval) -> String {
+    public func formatDuration(duration: TimeInterval) -> String {
         let time = TimeInterval(duration)
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.minute, .second]
@@ -22,7 +22,7 @@ final class TimeHelper: ObservableObject {
         return retTime!
     }
     
-    func audioSampleTime(audioFile: AVAudioFile) -> AVAudioTime {
+    public func audioSampleTime(audioFile: AVAudioFile) -> AVAudioTime {
         let framePosition = audioFile.framePosition
         let sampleRate = audioFile.fileFormat.sampleRate
         return AVAudioTime.init(sampleTime: framePosition, atRate: sampleRate)

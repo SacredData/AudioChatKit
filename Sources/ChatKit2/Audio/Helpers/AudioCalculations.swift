@@ -6,10 +6,11 @@
 //
 
 import Accelerate
+import AudioKit
 import AVFoundation
 
 /// Class for calculating static and real-time audio metrics for the UI
-class AudioCalculations: ObservableObject {
+public class AudioCalculations: ObservableObject {
     let stride = vDSP_Stride(1)
     @Published var dbArray: [CGFloat] = [10.0, 10.0, 10.0]
     var dbFloatsUI: [Float] = [10.0, 10.0, 10.0]
@@ -18,7 +19,7 @@ class AudioCalculations: ObservableObject {
     /// Every audio callback containing floats, call this function to re-calculate
     /// audio dB RMS and modify the CGFloats used in the UI to provide
     /// audio input visualizations.
-    func updateDbArray(_ audioData: [Float]) {
+    public func updateDbArray(_ audioData: [Float]) {
         let n = vDSP_Length(audioData.count)
         vDSP_rmsqv(audioData,
                    stride,
@@ -39,7 +40,7 @@ class AudioCalculations: ObservableObject {
         }
     }
     
-    func getPeak(audioBuffer: AVAudioPCMBuffer) -> AVAudioPCMBuffer.Peak {
+    public func getPeak(audioBuffer: AVAudioPCMBuffer) -> AVAudioPCMBuffer.Peak {
         return audioBuffer.peak()!
     }
 }

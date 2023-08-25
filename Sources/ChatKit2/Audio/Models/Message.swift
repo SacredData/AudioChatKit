@@ -20,7 +20,7 @@
 
 import AVFoundation
 
-final class Message: ObservableObject {
+public final class Message {
     let audioFile: AVAudioFile
     let author: String
     let date: Date

@@ -9,13 +9,13 @@
 import AudioKit
 import AVFoundation
 
-class AudioConfigHelper: ObservableObject {
+public class AudioConfigHelper {
     static var shared: AudioConfigHelper = AudioConfigHelper()
     var sessionPreferencesAreValid: Bool?
     var recordingFormatIsValid: Bool?
     var playbackFormatIsValid: Bool?
 
-    private init() {
+    public init() {
         initializeAudioKit()
         do {
             try setupDefaultSession()
@@ -24,32 +24,32 @@ class AudioConfigHelper: ObservableObject {
         }
     }
     
-    func setRecordSession() throws {
+    public func setRecordSession() throws {
         try AVAudioSession.sharedInstance().setCategory(.record, mode: .default)
     }
     
-    func validateAudioFormatForRecording(audioFormat: AVAudioFormat) {
+    public func validateAudioFormatForRecording(audioFormat: AVAudioFormat) {
         let isValidSampleRate = audioFormat.sampleRate == AudioFormats.record?.sampleRate
         let isValidChannelCount = audioFormat.channelCount == AudioFormats.record?.channelCount
         let isValidBitDepth = audioFormat.commonFormat == AudioFormats.record?.commonFormat
         recordingFormatIsValid = [isValidSampleRate, isValidChannelCount, isValidBitDepth].allSatisfy({$0 == true})
     }
     
-    func validateAudioFormatForPlayback(audioFormat: AVAudioFormat) {
+    public func validateAudioFormatForPlayback(audioFormat: AVAudioFormat) {
         let isValidSampleRate = audioFormat.sampleRate == AudioFormats.global?.sampleRate
         let isValidChannelCount = audioFormat.channelCount == AudioFormats.global?.channelCount
         let isValidBitDepth = audioFormat.commonFormat == AudioFormats.global?.commonFormat
         playbackFormatIsValid = [isValidSampleRate, isValidChannelCount, isValidBitDepth].allSatisfy({$0 == true})
     }
     
-    func validateAudioSessionPreferences(audioSession: AVAudioSession) -> Bool {
+    public func validateAudioSessionPreferences(audioSession: AVAudioSession) -> Bool {
         let prefersCorrectSampleRate = audioSession.preferredSampleRate == AudioFormats.global?.sampleRate
         let prefersCorrectInputChannels = audioSession.preferredInputNumberOfChannels == AudioFormats.record!.channelCount
         let prefersCorrectOutputChannels = audioSession.preferredOutputNumberOfChannels == AudioFormats.global!.channelCount
         return [prefersCorrectSampleRate, prefersCorrectInputChannels, prefersCorrectOutputChannels].allSatisfy({$0 == true})
     }
     
-    func validatePlaybackSessionCategory(audioSession: AVAudioSession) -> Bool {
+    public func validatePlaybackSessionCategory(audioSession: AVAudioSession) -> Bool {
         let hasPlaybackCategory = audioSession.category == .playback
         let hasSpokenAudioMode = audioSession.mode == .spokenAudio
         let hasLongAudioRoute = audioSession.routeSharingPolicy == .longFormAudio

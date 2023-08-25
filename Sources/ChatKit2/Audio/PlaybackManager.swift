@@ -9,14 +9,14 @@ import AudioKit
 import AVFoundation
 import MediaPlayer
 
-class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
+public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     private var audioEngineManager: AudioEngineManager = .shared
     private var audioConfig: AudioConfigHelper = .shared
     static var shared: PlaybackManager = PlaybackManager()
     
-    var engine: AudioKit.AudioEngine
+    public var engine: AudioKit.AudioEngine
     var mixer: AudioKit.Mixer
-    var player: AudioKit.AudioPlayer
+    public var player: AudioKit.AudioPlayer
     var session: AVAudioSession
     /// Use this published value to update UI progress bar
     @Published var currentProgress: Float?
@@ -84,8 +84,8 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     // The pending audio messages to play when player is freed up
     var messageQueue: [Message] = []
     var messageCompletions: [Message] = []
-    
-    private init() {
+
+    public init() {
         // Ensure we get AudioKit settings
         // Check the AudioKit settings and modify them if needed
         player = AudioPlayer()
@@ -120,7 +120,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         })
     }
     
-    func newLocalMessage(msg: Message) throws {
+    public func newLocalMessage(msg: Message) throws {
         let shouldBuffer = msg.audioFile.duration > 30
         if player.isPlaying {
             messageQueue.append(msg)
@@ -134,7 +134,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         }
     }
     
-    func seek(to time: TimeInterval) {
+    public func seek(to time: TimeInterval) {
         switch playbackState {
         case .isScheduling(let aVAudioFile),
                 .isBuffering(let aVAudioFile),

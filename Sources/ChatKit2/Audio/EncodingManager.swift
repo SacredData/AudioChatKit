@@ -10,7 +10,7 @@ import AVFoundation
 import Opus
 import SwiftOGG
 
-class EncodingManager: ObservableObject {
+public class EncodingManager: ObservableObject {
     let bitrate: Int = FormatConverterSettings.bitrate
     let sampleRate: Int = FormatConverterSettings.sampleRate
     let channelCount: Int = FormatConverterSettings.channels
