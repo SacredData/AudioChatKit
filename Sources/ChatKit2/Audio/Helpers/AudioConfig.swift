@@ -10,6 +10,7 @@ import AudioKit
 import AVFoundation
 
 class AudioConfigHelper: ObservableObject {
+    static var shared: AudioConfigHelper = AudioConfigHelper()
     var sessionPreferencesAreValid: Bool?
     var recordingFormatIsValid: Bool?
     var playbackFormatIsValid: Bool?
@@ -46,6 +47,13 @@ class AudioConfigHelper: ObservableObject {
         let prefersCorrectInputChannels = audioSession.preferredInputNumberOfChannels == AudioFormats.record!.channelCount
         let prefersCorrectOutputChannels = audioSession.preferredOutputNumberOfChannels == AudioFormats.global!.channelCount
         return [prefersCorrectSampleRate, prefersCorrectInputChannels, prefersCorrectOutputChannels].allSatisfy({$0 == true})
+    }
+    
+    func validatePlaybackSessionCategory(audioSession: AVAudioSession) -> Bool {
+        let hasPlaybackCategory = audioSession.category == .playback
+        let hasSpokenAudioMode = audioSession.mode == .spokenAudio
+        let hasLongAudioRoute = audioSession.routeSharingPolicy == .longFormAudio
+        return [hasPlaybackCategory, hasSpokenAudioMode, hasLongAudioRoute].allSatisfy({$0 == true})
     }
     
     private func initializeAudioKit() {
