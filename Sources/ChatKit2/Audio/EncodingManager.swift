@@ -18,6 +18,9 @@ class EncodingManager: ObservableObject {
 
     var opusEncoder: Opus.Encoder?
     let outputDirectory: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    
+    var latestM4a: URL?
+    var latestOpus: URL?
 
     /// Produces a mono M4A-contained AAC audio file from a mono Float32 48kHz PCM source
     func encodeToM4A(at inputURL: URL) -> URL {
@@ -36,6 +39,9 @@ class EncodingManager: ObservableObject {
             }
         }
 
+        // Save this in case opus encoding fails for some reason so we can recover
+        latestM4a = outputURL
+
         return outputURL
     }
 
@@ -44,6 +50,7 @@ class EncodingManager: ObservableObject {
         let outputURL = outputDirectory.appendingPathComponent("\(inputURL.lastPathComponent).converted.opus")
         let srcURL = encodeToM4A(at: inputURL)
         try OGGConverter.convertM4aFileToOpusOGG(src: srcURL, dest: outputURL)
+        latestOpus = outputURL
         return outputURL
     }
 
