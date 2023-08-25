@@ -32,6 +32,7 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
         Log(player)
         outputMixer = player.mixerNode
         setupOutputMixing(node: player)
+        Log(engine.connectionTreeDescription)
     }
 
     private func setupOutputMixing(node: Node) {
@@ -42,5 +43,12 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
         let fastCompressor = Compressor(eqHigh, threshold: -15.0, headRoom:5.0, attackTime: 0.001, releaseTime: 0.15, masterGain: 1.0)
         let slowCompressor = Compressor(fastCompressor, threshold: -25.0, headRoom:5.0, attackTime: 0.12, releaseTime: 0.4, masterGain: 1.0)
         _ = PeakLimiter(slowCompressor, attackTime: 0.1, decayTime: 0.5, preGain: 2.0)
+    }
+    
+    private func instantiateInput() {
+        Log("Requesting default audio engine input")
+        guard let input = engine.input else { return }
+        Log("Got the InputNode")
+        Log(input)
     }
 }
