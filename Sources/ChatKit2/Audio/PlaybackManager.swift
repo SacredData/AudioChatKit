@@ -31,7 +31,8 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
             return player.currentPosition
         }
     }
-    var currentMessage: [String: AVAudioFile]?
+    var currentFile: [String: AVAudioFile]?
+    var nowPlayableMessage: Message?
     var currentStatus: NodeStatus.Playback? {
         get {
             return player.status
@@ -61,8 +62,14 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
                 if let file = player.file {
                     // Our anchor AVAudioTime to use for tracking timeline progress
                     sampleStartTime = TimeHelper().audioSampleTime(audioFile: file)
-                    // Set the class's currentMessage to what player has loaded
-                    currentMessage = [getUploadIdFromFile(file: file): file]
+                    // Set the class's currentFile to what player has loaded
+                    currentFile = [getUploadIdFromFile(file: file): file]
+
+                    if let npmsg = nowPlayableMessage {
+                        if npmsg.audioFile == file {
+                            changeNowPlayingItem(msg: npmsg)
+                        }
+                    }
                 }
             default:
                 break
@@ -101,7 +108,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         }
         
         player.completionHandler = playbackCompletionHandler
-        
+
         // TODO: Finish the player tap and increment time elapsed in handler
         _ = RawDataTap2.init(player, handler: {floats in
             Log(floats)
@@ -117,6 +124,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
             try player.load(file: msg.audioFile, buffered: shouldBuffer)
             if player.isBuffered || player.file == msg.audioFile {
                 playbackState = PlaybackState.isReady(player.file)
+                nowPlayableMessage = msg
             }
         }
     }
@@ -175,13 +183,18 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     private func getUploadIdFromFile(file: AVAudioFile) -> String {
         return file.url.lastPathComponent.replacingOccurrences(of: ".caf", with: "")
     }
-    
-    // TODO:
-    /*
-    private func changeNowPlayingItem() {
-        IOSNowPlayableBehavior().handleNowPlayableItemChange(metadata: NowPlayableStaticMetadata(assetURL: <#T##URL#>, mediaType: <#T##MPNowPlayingInfoMediaType#>, isLiveStream: <#T##Bool#>, title: <#T##String#>, artist: <#T##String?#>, artwork: <#T##MPMediaItemArtwork?#>, albumArtist: <#T##String?#>, albumTitle: <#T##String?#>))
+
+    private func changeNowPlayingItem(msg: Message) {
+        IOSNowPlayableBehavior().handleNowPlayableItemChange(metadata: NowPlayableStaticMetadata(
+            assetURL: msg.audioFile.url,
+            mediaType: .audio,
+            isLiveStream: false,
+            title: msg.title,
+            artist: msg.author,
+            artwork: nil,
+            albumArtist: msg.author,
+            albumTitle: msg.teamName))
     }
-    */
 }
 
 /// Enables TimeInterval value to be clamped from 0 ... duration of message
