@@ -7,6 +7,7 @@
 
 import AudioKit
 import AVFoundation
+import MediaPlayer
 
 class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     private var audioEngineManager: AudioEngineManager = .shared
@@ -112,6 +113,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         // TODO: Finish the player tap and increment time elapsed in handler
         _ = RawDataTap2.init(player, handler: {floats in
             Log(floats)
+            self.updateNowPlayingProgress()
         })
     }
     
@@ -160,7 +162,7 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
             break
         }
     }
-    
+
     private func startPlaybackAudioEngine() {
         do {
             try configurePlaybackSession()
@@ -194,6 +196,21 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
             artwork: nil,
             albumArtist: msg.author,
             albumTitle: msg.teamName))
+    }
+    
+    private func updateNowPlayingProgress() {
+        var isPlayingNow = false
+        switch playbackState {
+        case .isPlaying:
+            isPlayingNow = true
+        default:
+            break
+        }
+        let currentLO = nowPlayableMessage!.transcript?.languageOption
+        let loGroup = MPNowPlayingInfoLanguageOptionGroup.init(languageOptions: [currentLO!], defaultLanguageOption: currentLO, allowEmptySelection: true)
+        IOSNowPlayableBehavior().handleNowPlayablePlaybackChange(
+            playing: isPlayingNow,
+            metadata: NowPlayableDynamicMetadata(rate: player.playerNode.rate, position: Float(player.currentPosition), duration: Float(player.duration), currentLanguageOptions: [currentLO!], availableLanguageOptionGroups: [loGroup]))
     }
 }
 
