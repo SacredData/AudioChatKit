@@ -17,6 +17,8 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     var mixer: AudioKit.Mixer
     var player: AudioKit.AudioPlayer
     var session: AVAudioSession
+    /// Use this published value to update UI progress bar
+    @Published var currentProgress: Float?
     var currentTime: TimeInterval? {
         get {
             return player.currentTime
@@ -206,11 +208,17 @@ class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
         default:
             break
         }
-        let currentLO = nowPlayableMessage!.transcript?.languageOption
-        let loGroup = MPNowPlayingInfoLanguageOptionGroup.init(languageOptions: [currentLO!], defaultLanguageOption: currentLO, allowEmptySelection: true)
-        IOSNowPlayableBehavior().handleNowPlayablePlaybackChange(
-            playing: isPlayingNow,
-            metadata: NowPlayableDynamicMetadata(rate: player.playerNode.rate, position: Float(player.currentPosition), duration: Float(player.duration), currentLanguageOptions: [currentLO!], availableLanguageOptionGroups: [loGroup]))
+        if isPlayingNow {
+            let currentLO = nowPlayableMessage!.transcript?.languageOption
+            let loGroup = MPNowPlayingInfoLanguageOptionGroup.init(languageOptions: [currentLO!], defaultLanguageOption: currentLO, allowEmptySelection: true)
+            IOSNowPlayableBehavior().handleNowPlayablePlaybackChange(
+                playing: isPlayingNow,
+                metadata: NowPlayableDynamicMetadata(rate: player.playerNode.rate, position: Float(player.currentPosition), duration: Float(player.duration), currentLanguageOptions: [currentLO!], availableLanguageOptionGroups: [loGroup]))
+            DispatchQueue.main.async {
+                // Publish new progress float for UI to grab
+                self.currentProgress = Float(self.player.currentPosition)
+            }
+        }
     }
 }
 
