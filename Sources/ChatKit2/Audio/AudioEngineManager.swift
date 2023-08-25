@@ -17,17 +17,18 @@ import AVFoundation
 class AudioEngineManager: ObservableObject, HasAudioEngine {
     static var shared: AudioEngineManager = AudioEngineManager()
 
+    private var audioConfig: AudioConfigHelper = .shared
     private var playback: PlaybackManager = .shared
 
     let player: AudioPlayer
     let engine: AudioEngine
     let session: AVAudioSession = AVAudioSession.sharedInstance()
-    let outputMixer: Mixer
+    let outputMixer: AVAudioMixerNode
 
     public init() {
         engine = AudioEngine()
         player = playback.player
-        outputMixer = Mixer()
+        outputMixer = player.mixerNode
         setupOutputMixing(node: player)
     }
     

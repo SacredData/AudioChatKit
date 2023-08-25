@@ -11,6 +11,7 @@ import MediaPlayer
 
 class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
     private var audioEngineManager: AudioEngineManager = .shared
+    private var audioConfig: AudioConfigHelper = .shared
     static var shared: PlaybackManager = PlaybackManager()
     
     var engine: AudioKit.AudioEngine
