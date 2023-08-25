@@ -42,7 +42,7 @@ public final class Message {
     var staticMetadata: NowPlayableStaticMetadata?
     var dynamicMetadata: NowPlayableDynamicMetadata?
 
-    init(audioFile: AVAudioFile, author: String="", date: String="", feedId: String="", teamName: String="", title: String="") {
+    public init(audioFile: AVAudioFile, author: String="", date: String="", feedId: String="", teamName: String="", title: String="") {
         self.audioFile = audioFile
         self.author = author
         self.date = ISO8601DateFormatter().date(from: date) ?? Date()
