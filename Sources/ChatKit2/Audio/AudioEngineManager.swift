@@ -16,11 +16,7 @@ import AVFoundation
 /// properties, and session interruptions.
 public class AudioEngineManager: ObservableObject, HasAudioEngine {
     static var shared: AudioEngineManager = AudioEngineManager()
-
-    private var audioConfig: AudioConfigHelper = .shared
-    private var playback: PlaybackManager = .shared
-
-    let player: AudioPlayer
+    public let player: AudioPlayer
     public let engine: AudioEngine
     let session: AVAudioSession = AVAudioSession.sharedInstance()
     let outputMixer: AVAudioMixerNode
@@ -28,11 +24,10 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
     public init() {
         engine = AudioEngine()
         Log(engine)
-        player = playback.player
+        player = AudioPlayer()
         Log(player)
         outputMixer = player.mixerNode
         setupOutputMixing(node: player)
-        Log(engine.connectionTreeDescription)
     }
 
     private func setupOutputMixing(node: Node) {

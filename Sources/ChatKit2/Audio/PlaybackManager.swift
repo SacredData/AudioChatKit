@@ -10,16 +10,16 @@ import AVFoundation
 import MediaPlayer
 
 public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
-    private var audioEngineManager: AudioEngineManager = .shared
     private var audioConfig: AudioConfigHelper = .shared
-    static var shared: PlaybackManager = PlaybackManager()
-    
-    var nowPlayable: Bool = false
-    
+    private var audioEngineManager: AudioEngineManager = .shared
     public var engine: AudioKit.AudioEngine
-    var mixer: AudioKit.Mixer
     public var player: AudioKit.AudioPlayer
+
+    var mixer: AudioKit.Mixer
     var session: AVAudioSession
+
+    var nowPlayable: Bool = false
+
     /// Use this published value to update UI progress bar
     @Published var currentProgress: Float?
     var currentTime: TimeInterval? {
@@ -90,8 +90,8 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
     public init() {
         // Ensure we get AudioKit settings
         // Check the AudioKit settings and modify them if needed
-        player = AudioPlayer()
         mixer = Mixer()
+        player = audioEngineManager.player
         engine = audioEngineManager.engine
         session = audioEngineManager.session
         
