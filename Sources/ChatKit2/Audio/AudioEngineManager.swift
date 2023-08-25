@@ -27,11 +27,13 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
 
     public init() {
         engine = AudioEngine()
+        Log(engine)
         player = playback.player
+        Log(player)
         outputMixer = player.mixerNode
         setupOutputMixing(node: player)
     }
-    
+
     private func setupOutputMixing(node: Node) {
         let eqLow = ParametricEQ(node, centerFreq: 150, q: 0.1, gain: 1)
         let eqLowMid = ParametricEQ(eqLow, centerFreq: 800, q: 5, gain: -3.5)

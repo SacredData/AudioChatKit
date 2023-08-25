@@ -14,6 +14,8 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
     private var audioConfig: AudioConfigHelper = .shared
     static var shared: PlaybackManager = PlaybackManager()
     
+    var nowPlayable: Bool = false
+    
     public var engine: AudioKit.AudioEngine
     var mixer: AudioKit.Mixer
     public var player: AudioKit.AudioPlayer
@@ -125,10 +127,10 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
         if player.isPlaying {
             messageQueue.append(msg)
         } else {
-            startPlaybackAudioEngine()
             try player.load(file: msg.audioFile, buffered: shouldBuffer)
             if player.isBuffered || player.file == msg.audioFile {
                 playbackState = PlaybackState.isReady(player.file)
+                startPlaybackAudioEngine()
                 nowPlayableMessage = msg
             }
         }
@@ -178,11 +180,15 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
     }
     
     private func configurePlaybackSession() throws {
-        try IOSNowPlayableBehavior().handleNowPlayableSessionStart()
+        if !nowPlayable {
+            try IOSNowPlayableBehavior().handleNowPlayableSessionStart()
+        }
+        nowPlayable = true
     }
     
     private func endPlaybackSession() {
         IOSNowPlayableBehavior().handleNowPlayableSessionEnd()
+        nowPlayable = false
     }
     
     private func getUploadIdFromFile(file: AVAudioFile) -> String {
