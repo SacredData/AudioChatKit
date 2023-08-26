@@ -17,11 +17,11 @@ public class AudioConfigHelper {
 
     public init() {
         initializeAudioKit()
-        do {
+        /*do {
             try setupDefaultSession()
         } catch {
             fatalError("\(error)")
-        }
+        }*/
     }
     
     public func setRecordSession() throws {
@@ -69,7 +69,7 @@ public class AudioConfigHelper {
     }
     
     /// Default config for audio session will be long-form spoken audio playback
-    private func setupDefaultSession() throws {
+    public func setupDefaultSession() throws {
         let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
         sessionPreferencesAreValid = validateAudioSessionPreferences(audioSession: audioSession)
