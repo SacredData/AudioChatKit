@@ -15,7 +15,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
     public var engine: AudioKit.AudioEngine
     public var player: AudioKit.AudioPlayer
 
-    var mixer: AudioKit.Mixer
     var session: AVAudioSession
 
     var nowPlayable: Bool = false
@@ -90,14 +89,9 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
     public init() {
         // Ensure we get AudioKit settings
         // Check the AudioKit settings and modify them if needed
-        mixer = Mixer()
         player = audioEngineManager.player
         engine = audioEngineManager.engine
         session = audioEngineManager.session
-        
-        mixer.addInput(player)
-        engine.output = mixer
-        
         playbackState = PlaybackState.isWaiting
         
         let playbackCompletionHandler = {
@@ -114,12 +108,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
         }
         
         player.completionHandler = playbackCompletionHandler
-
-        // TODO: Finish the player tap and increment time elapsed in handler
-        _ = RawDataTap2.init(player, handler: {floats in
-            Log(floats)
-            self.updateNowPlayingProgress()
-        })
     }
     
     public func newLocalMessage(msg: Message) throws {
