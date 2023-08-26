@@ -46,38 +46,39 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
     var sampleStartTime: AVAudioTime?
     var playbackState: PlaybackState = .isInitializing {
         didSet {
-            // TODO: Handle changes in playback state
-            switch playbackState {
-            case .isPaused:
-                // Do not end the playback session but be able to be interrupted
-                if player.status != .paused {
-                    player.pause()
-                }
-            case .isStopped:
-                // Explicitly stopping the player timeline means we end session
-                if player.status != .stopped {
-                    player.stop()
-                }
-                endPlaybackSession()
-            case .isReady:
-                // Set this to indicate we can/should play
-                // DO NOT use .isPlaying
-                playMessage()
-            case .isPlaying:
-                if let file = player.file {
-                    // Our anchor AVAudioTime to use for tracking timeline progress
-                    sampleStartTime = TimeHelper().audioSampleTime(audioFile: file)
-                    // Set the class's currentFile to what player has loaded
-                    currentFile = [getUploadIdFromFile(file: file): file]
+            DispatchQueue.global(qos: .userInitiated).async {
+                switch self.playbackState {
+                case .isPaused:
+                    // Do not end the playback session but be able to be interrupted
+                    if self.player.status != .paused {
+                        self.player.pause()
+                    }
+                case .isStopped:
+                    // Explicitly stopping the player timeline means we end session
+                    if self.player.status != .stopped {
+                        self.player.stop()
+                    }
+                    self.endPlaybackSession()
+                case .isReady:
+                    // Set this to indicate we can/should play
+                    // DO NOT use .isPlaying
+                    self.playMessage()
+                case .isPlaying:
+                    if let file = self.player.file {
+                        // Our anchor AVAudioTime to use for tracking timeline progress
+                        self.sampleStartTime = TimeHelper().audioSampleTime(audioFile: file)
+                        // Set the class's currentFile to what player has loaded
+                        self.currentFile = [self.getUploadIdFromFile(file: file): file]
 
-                    if let npmsg = nowPlayableMessage {
-                        if npmsg.audioFile == file {
-                            changeNowPlayingItem(msg: npmsg)
+                        if let npmsg = self.nowPlayableMessage {
+                            if npmsg.audioFile == file {
+                                self.changeNowPlayingItem(msg: npmsg)
+                            }
                         }
                     }
+                default:
+                    break
                 }
-            default:
-                break
             }
         }
     }
@@ -127,34 +128,38 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
     }
     
     public func seek(to time: TimeInterval) {
-        switch playbackState {
-        case .isScheduling(let aVAudioFile),
-                .isBuffering(let aVAudioFile),
-                .isPaused(let aVAudioFile),
-                .isPlaying(let aVAudioFile),
-                .isReady(let aVAudioFile),
-                .isInterrupted(let aVAudioFile):
-            // No matter what the clamped time will never be > audio duration
-            let clampedTime = time.clamped(to: 0 ... aVAudioFile!.duration)
-            player.seek(time: clampedTime)
-        default:
-            break
+        DispatchQueue.global(qos: .userInteractive).async {
+            switch self.playbackState {
+            case .isScheduling(let aVAudioFile),
+                    .isBuffering(let aVAudioFile),
+                    .isPaused(let aVAudioFile),
+                    .isPlaying(let aVAudioFile),
+                    .isReady(let aVAudioFile),
+                    .isInterrupted(let aVAudioFile):
+                // No matter what the clamped time will never be > audio duration
+                let clampedTime = time.clamped(to: 0 ... aVAudioFile!.duration)
+                self.player.seek(time: clampedTime)
+            default:
+                break
+            }
         }
     }
     
     private func playMessage() {
-        switch playbackState {
-        case .isScheduling(let aVAudioFile),
-                .isBuffering(let aVAudioFile),
-                .isPaused(let aVAudioFile),
-                .isStopped(let aVAudioFile),
-                .isReady(let aVAudioFile):
-            player.play()
-            if player.isPlaying {
-                playbackState = PlaybackState.isPlaying(aVAudioFile)
+        DispatchQueue.global(qos: .userInitiated).async {
+            switch self.playbackState {
+            case .isScheduling(let aVAudioFile),
+                    .isBuffering(let aVAudioFile),
+                    .isPaused(let aVAudioFile),
+                    .isStopped(let aVAudioFile),
+                    .isReady(let aVAudioFile):
+                self.player.play()
+                if self.player.isPlaying {
+                    self.playbackState = PlaybackState.isPlaying(aVAudioFile)
+                }
+            default:
+                break
             }
-        default:
-            break
         }
     }
 

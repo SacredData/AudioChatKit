@@ -20,23 +20,25 @@ public class AudioCalculations: ObservableObject {
     /// audio dB RMS and modify the CGFloats used in the UI to provide
     /// audio input visualizations.
     public func updateDbArray(_ audioData: [Float]) {
-        let n = vDSP_Length(audioData.count)
-        vDSP_rmsqv(audioData,
-                   stride,
-                   &recDbRMS,
-                   n)
-       
-        let appendVal = recDbRMS * 1000
-       
-        dbFloatsUI.removeFirst()
-        dbFloatsUI.append(appendVal > 40.0 ? 40.0 : appendVal)
-        dbFloatsUI = vDSP.threshold(dbFloatsUI,
-                                    to: 10.0,
-                                    with: .clampToThreshold)
+        DispatchQueue.global(qos: .userInteractive).async {
+            let n = vDSP_Length(audioData.count)
+            vDSP_rmsqv(audioData,
+                       self.stride,
+                       &self.recDbRMS,
+                       n)
+           
+            let appendVal = self.recDbRMS * 1000
+           
+            self.dbFloatsUI.removeFirst()
+            self.dbFloatsUI.append(appendVal > 40.0 ? 40.0 : appendVal)
+            self.dbFloatsUI = vDSP.threshold(self.dbFloatsUI,
+                                        to: 10.0,
+                                        with: .clampToThreshold)
 
-        DispatchQueue.main.async {
-            self.dbArray.removeFirst()
-            self.dbArray.append(CGFloat(self.dbFloatsUI[2]))
+            DispatchQueue.main.async {
+                self.dbArray.removeFirst()
+                self.dbArray.append(CGFloat(self.dbFloatsUI[2]))
+            }
         }
     }
     
