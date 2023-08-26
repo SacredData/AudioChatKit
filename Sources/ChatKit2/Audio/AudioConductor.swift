@@ -10,8 +10,8 @@ import AVFoundation
 
 public class AudioConductor: ObservableObject {
     static var shared: AudioConductor = AudioConductor()
-    let engineMan: AudioEngineManager = AudioEngineManager()
-    let playerMan: PlaybackManager = PlaybackManager()
+    public let engineMan: AudioEngineManager = AudioEngineManager()
+    public let playerMan: PlaybackManager = PlaybackManager()
     
     let engine: AudioEngine
     let player: AudioPlayer
