@@ -9,7 +9,7 @@ import AudioKit
 import AVFoundation
 import MediaPlayer
 
-public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEngine {
+public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     private var audioConfig: AudioConfigHelper = .shared
     private var audioEngineManager: AudioEngineManager = .shared
     public var engine: AudioKit.AudioEngine
