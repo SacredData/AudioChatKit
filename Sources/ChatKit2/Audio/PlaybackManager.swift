@@ -37,7 +37,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
         }
     }
     var currentFile: [String: AVAudioFile]?
-    var nowPlayableMessage: Message?
+    @Published var nowPlayableMessage: Message?
     var currentStatus: NodeStatus.Playback? {
         get {
             return player.status
@@ -119,7 +119,9 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput, HasAudioEn
             if player.isBuffered || player.file == msg.audioFile {
                 playbackState = PlaybackState.isReady(player.file)
                 startPlaybackAudioEngine()
-                nowPlayableMessage = msg
+                DispatchQueue.main.async {
+                    self.nowPlayableMessage = msg
+                }
             }
         }
     }
