@@ -26,5 +26,6 @@ public class AudioConductor: ObservableObject {
         mixer.addInput(player)
         engine.output = mixer
         Log(engine.connectionTreeDescription)
+        Log(engine.avEngine.isRunning)
     }
 }
