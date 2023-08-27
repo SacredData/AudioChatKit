@@ -17,11 +17,6 @@ public class AudioConfigHelper {
 
     public init() {
         initializeAudioKit()
-        /*do {
-            try setupDefaultSession()
-        } catch {
-            fatalError("\(error)")
-        }*/
     }
     
     public func setRecordSession() throws {
@@ -61,6 +56,7 @@ public class AudioConfigHelper {
         formatSettings[AVSampleRateKey] = 48000
         formatSettings[AVLinearPCMBitDepthKey] = 32
         formatSettings[AVLinearPCMIsFloatKey] = true
+        formatSettings[AVNumberOfChannelsKey] = 1
         
         AudioKit.Settings.enableLogging = true
         AudioKit.Settings.bufferLength = .short

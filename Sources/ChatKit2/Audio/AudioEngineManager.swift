@@ -18,6 +18,7 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
     static var shared: AudioEngineManager = AudioEngineManager()
     public let player: AudioPlayer
     public let engine: AudioEngine
+    public var recorder: NodeRecorder?
     let session: AVAudioSession = AVAudioSession.sharedInstance()
     let outputMixer: AVAudioMixerNode
 
@@ -39,11 +40,33 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
         let slowCompressor = Compressor(fastCompressor, threshold: -25.0, headRoom:5.0, attackTime: 0.12, releaseTime: 0.4, masterGain: 1.0)
         _ = PeakLimiter(slowCompressor, attackTime: 0.1, decayTime: 0.5, preGain: 2.0)
     }
-    
-    private func instantiateInput() {
+
+    private func instantiateInput(eng: AudioEngine) throws -> AudioEngine.InputNode {
         Log("Requesting default audio engine input")
-        guard let input = engine.input else { return }
+        IOSNowPlayableBehavior().handleNowPlayableSessionEnd()
+        try session.setCategory(.playAndRecord, mode: .default)
+        let hasValidPrefs = AudioConfigHelper().validateAudioSessionPreferences(audioSession: session)
+        Log(hasValidPrefs)
+        guard let input = eng.input else { fatalError("No input found") }
         Log("Got the InputNode")
         Log(input)
+        Log(eng.inputDevice)
+        return input
+    }
+    
+    private func setupRecorder() throws {
+        let recEngine = AudioEngine()
+        let inputNode = try instantiateInput(eng: recEngine)
+        let recMixer = Mixer([inputNode])
+        recorder = try NodeRecorder(node: inputNode, shouldCleanupRecordings: true) { floats, time in
+            Log(floats, time)
+            AudioCalculations().updateDbArray(floats)
+        }
+        Log(recorder)
+        recEngine.output = recMixer
+        try recEngine.start()
+        Log(recMixer.connections)
+        Log(recEngine.connectionTreeDescription)
+        try recorder?.record()
     }
 }
