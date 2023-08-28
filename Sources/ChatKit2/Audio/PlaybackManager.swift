@@ -108,8 +108,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                 self.playbackState = PlaybackState.isBuffering(nextMessage.audioFile)
             } else {
                 // We ain't got nothin' so lets just sit there and wait
-                self.playbackState = PlaybackState.isStopped
-                // self.playbackState = PlaybackState.isWaiting
+                self.playbackState = PlaybackState.isWaiting
             }
         }
         
