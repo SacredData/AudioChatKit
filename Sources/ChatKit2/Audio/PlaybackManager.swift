@@ -93,6 +93,8 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         playbackState = PlaybackState.isWaiting
         
         let playbackCompletionHandler = {
+            self.tapStartTime = nil
+            self.currentProgress = 0.0
             let queuedMessages = self.messageQueue.count
             if queuedMessages > 0 {
                 // We need to pop the next message from the queue and play
