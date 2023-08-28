@@ -12,28 +12,23 @@ import MediaPlayer
 public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     private var audioConfig: AudioConfigHelper = .shared
     private var audioEngineManager: AudioEngineManager = .shared
+    public let audioCalc: AudioCalculations = .shared
     public var engine: AudioKit.AudioEngine
     public var player: AudioKit.AudioPlayer
 
     var session: AVAudioSession
 
     var nowPlayable: Bool = false
+    
+    var tapStartTime: AVAudioTime?
+    var playackTime: TimeInterval?
 
     /// Use this published value to update UI progress bar
     @Published var currentProgress: Float?
-    var currentTime: TimeInterval? {
-        get {
-            return player.currentTime
-        }
-    }
+    var currentTime: TimeInterval?
     var currentTimeString: String? {
         get {
             return TimeHelper().formatDuration(duration: currentTime ?? 0.0)
-        }
-    }
-    var currentPosition: Double? {
-        get {
-            return player.currentPosition
         }
     }
     var currentFile: [String: AVAudioFile]?
@@ -64,6 +59,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                     // DO NOT use .isPlaying
                     self.playMessage()
                 case .isPlaying:
+                    self.tapStartTime = AVAudioTime.now()
                     if let file = self.player.file {
                         // Our anchor AVAudioTime to use for tracking timeline progress
                         self.sampleStartTime = TimeHelper().audioSampleTime(audioFile: file)
@@ -86,6 +82,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     // The pending audio messages to play when player is freed up
     var messageQueue: [Message] = []
     var messageCompletions: [Message] = []
+    //var tap: RawDataTap?
 
     public init() {
         // Ensure we get AudioKit settings
@@ -109,6 +106,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         }
         
         player.completionHandler = playbackCompletionHandler
+        //tap = setupOutputTap(inputNode: player)
     }
     
     public func newLocalMessage(msg: Message) throws {
@@ -143,6 +141,15 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                 break
             }
         }
+    }
+    
+    public func setupOutputTap(inputNode: Node) -> RawDataTap {
+        return RawDataTap(inputNode, bufferSize: 1024, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInteractive), handler: { _ in
+            if self.tapStartTime != nil {
+                self.currentProgress = Float(self.player.currentPosition)
+                self.currentTime = self.player.currentTime
+            }
+        })
     }
     
     private func playMessage() {
@@ -200,6 +207,8 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     }
     
     private func updateNowPlayingProgress() {
+        let theTimeRightNow = AVAudioTime.extrapolateTime(tapStartTime!)
+        Log(theTimeRightNow)
         var isPlayingNow = false
         switch playbackState {
         case .isPlaying:

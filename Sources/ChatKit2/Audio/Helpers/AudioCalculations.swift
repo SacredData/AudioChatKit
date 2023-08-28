@@ -11,6 +11,7 @@ import AVFoundation
 
 /// Class for calculating static and real-time audio metrics for the UI
 public class AudioCalculations: ObservableObject {
+    static var shared: AudioCalculations = AudioCalculations()
     let stride = vDSP_Stride(1)
     @Published var dbArray: [CGFloat] = [10.0, 10.0, 10.0]
     var dbFloatsUI: [Float] = [10.0, 10.0, 10.0]

@@ -12,11 +12,13 @@ public class AudioConductor: ObservableObject, HasAudioEngine {
     static var shared: AudioConductor = AudioConductor()
     public let engineMan: AudioEngineManager = AudioEngineManager()
     public let playerMan: PlaybackManager = PlaybackManager()
+    public let audioCalc: AudioCalculations = AudioCalculations()
     
     public let engine: AudioEngine
     let player: AudioPlayer
     let session: AVAudioSession
     let mixer: Mixer = Mixer()
+    var outputTap: RawDataTap
     
     public init() {
         engine = engineMan.engine
@@ -26,5 +28,8 @@ public class AudioConductor: ObservableObject, HasAudioEngine {
         //mixer.addInput(player)
         engine.output = player
         Log(engine.connectionTreeDescription)
+        
+        outputTap = playerMan.setupOutputTap(inputNode: player)
+        outputTap.start()
     }
 }
