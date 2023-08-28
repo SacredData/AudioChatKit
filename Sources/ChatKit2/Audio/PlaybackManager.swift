@@ -108,25 +108,36 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         }
         
         player.completionHandler = playbackCompletionHandler
-        //tap = setupOutputTap(inputNode: player)
     }
     
     public func newLocalMessage(msg: Message) throws {
-        let shouldBuffer = msg.audioFile.duration > 30
         if player.isPlaying {
             messageQueue.append(msg)
         } else {
-            try player.load(file: msg.audioFile, buffered: shouldBuffer)
-            if player.isBuffered || player.file == msg.audioFile {
-                playbackState = PlaybackState.isReady(player.file)
-                startPlaybackAudioEngine()
-                DispatchQueue.main.async {
-                    self.nowPlayableMessage = msg
-                }
+            try load(msg: msg)
+        }
+    }
+    
+    public func load(msg: Message) throws {
+        let shouldBuffer = msg.audioFile.duration > 30
+        try player.load(file: msg.audioFile, buffered: shouldBuffer)
+        if player.isBuffered || player.file == msg.audioFile {
+            playbackState = PlaybackState.isReady(player.file)
+            startPlaybackAudioEngine()
+            DispatchQueue.main.async {
+                self.nowPlayableMessage = msg
             }
         }
     }
     
+    public func play(msg: Message) {
+        do {
+            try load(msg: msg)
+        } catch {
+            Log(error)
+        }
+    }
+
     public func seek(to time: TimeInterval) {
         DispatchQueue.global(qos: .userInteractive).async {
             switch self.playbackState {
@@ -146,7 +157,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     }
     
     public func setupOutputTap(inputNode: Node) -> RawDataTap {
-        return RawDataTap(inputNode, bufferSize: 1024, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInteractive), handler: { _ in
+        return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInteractive), handler: { _ in
             if self.tapStartTime != nil {
                 self.currentProgress = Float(self.player.currentPosition)
                 self.currentTime = self.player.currentTime
