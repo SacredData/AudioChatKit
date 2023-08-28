@@ -54,7 +54,7 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
         return input
     }
     
-    private func setupRecorder() throws {
+    public func setupRecorder() throws {
         let recEngine = AudioEngine()
         let inputNode = try instantiateInput(eng: recEngine)
         let recMixer = Mixer([inputNode])

@@ -24,11 +24,10 @@ public class AudioConductor: ObservableObject, HasAudioEngine {
         engine = engineMan.engine
         session = engineMan.session
         player = playerMan.player
-        
-        //mixer.addInput(player)
+
         engine.output = player
         Log(engine.connectionTreeDescription)
-        
+
         outputTap = playerMan.setupOutputTap(inputNode: player)
         outputTap.start()
     }

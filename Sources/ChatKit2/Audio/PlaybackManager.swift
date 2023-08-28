@@ -56,6 +56,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                         self.player.stop()
                     }
                     self.endPlaybackSession()
+                    try! self.audioEngineManager.setupRecorder()
                 case .isReady:
                     // Set this to indicate we can/should play
                     // DO NOT use .isPlaying
@@ -107,7 +108,8 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                 self.playbackState = PlaybackState.isBuffering(nextMessage.audioFile)
             } else {
                 // We ain't got nothin' so lets just sit there and wait
-                self.playbackState = PlaybackState.isWaiting
+                self.playbackState = PlaybackState.isStopped
+                // self.playbackState = PlaybackState.isWaiting
             }
         }
         
@@ -174,7 +176,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
             case .isScheduling(let aVAudioFile),
                     .isBuffering(let aVAudioFile),
                     .isPaused(let aVAudioFile),
-                    .isStopped(let aVAudioFile),
                     .isReady(let aVAudioFile):
                 self.player.play()
                 if self.player.isPlaying {
@@ -236,11 +237,14 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                 self.currentProgress = Float(self.player.currentPosition)
                 self.currentTime = self.player.currentTime
             }
-            let currentLO = nowPlayableMessage!.transcript?.languageOption
-            let loGroup = MPNowPlayingInfoLanguageOptionGroup.init(languageOptions: [currentLO!], defaultLanguageOption: currentLO, allowEmptySelection: true)
-            IOSNowPlayableBehavior().handleNowPlayablePlaybackChange(
-                playing: isPlayingNow,
-                metadata: NowPlayableDynamicMetadata(rate: player.playerNode.rate, position: Float(player.currentPosition), duration: Float(player.duration), currentLanguageOptions: [currentLO!], availableLanguageOptionGroups: [loGroup]))
+            if nowPlayableMessage?.transcript != nil {
+                let currentLO = nowPlayableMessage!.transcript?.languageOption
+                let loGroup = MPNowPlayingInfoLanguageOptionGroup.init(languageOptions: [currentLO!], defaultLanguageOption: currentLO, allowEmptySelection: true)
+                
+                IOSNowPlayableBehavior().handleNowPlayablePlaybackChange(
+                    playing: isPlayingNow,
+                    metadata: NowPlayableDynamicMetadata(rate: player.playerNode.rate, position: Float(player.currentPosition), duration: Float(player.duration), currentLanguageOptions: [currentLO!], availableLanguageOptionGroups: [loGroup]))
+            }
         }
     }
 }
