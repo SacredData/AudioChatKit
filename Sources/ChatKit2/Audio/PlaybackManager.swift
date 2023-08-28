@@ -59,7 +59,9 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                 case .isReady:
                     // Set this to indicate we can/should play
                     // DO NOT use .isPlaying
-                    self.playMessage()
+                    if !self.player.isPlaying {
+                        self.playMessage()
+                    }
                 case .isPlaying:
                     self.tapStartTime = AVAudioTime.now()
                     if let file = self.player.file {
@@ -154,8 +156,9 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     public func setupOutputTap(inputNode: Node) -> RawDataTap {
         return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInteractive), handler: { _ in
             if self.tapStartTime != nil {
-                self.currentProgress = Float(self.player.currentPosition)
-                self.currentTime = self.player.currentTime
+                //self.currentProgress = Float(self.player.currentPosition)
+                //self.currentTime = self.player.currentTime
+                self.updateNowPlayingProgress()
             }
         })
     }
@@ -223,15 +226,16 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
             break
         }
         if isPlayingNow {
+            DispatchQueue.main.async {
+                // Publish new progress float for UI to grab
+                self.currentProgress = Float(self.player.currentPosition)
+                self.currentTime = self.player.currentTime
+            }
             let currentLO = nowPlayableMessage!.transcript?.languageOption
             let loGroup = MPNowPlayingInfoLanguageOptionGroup.init(languageOptions: [currentLO!], defaultLanguageOption: currentLO, allowEmptySelection: true)
             IOSNowPlayableBehavior().handleNowPlayablePlaybackChange(
                 playing: isPlayingNow,
                 metadata: NowPlayableDynamicMetadata(rate: player.playerNode.rate, position: Float(player.currentPosition), duration: Float(player.duration), currentLanguageOptions: [currentLO!], availableLanguageOptionGroups: [loGroup]))
-            DispatchQueue.main.async {
-                // Publish new progress float for UI to grab
-                self.currentProgress = Float(self.player.currentPosition)
-            }
         }
     }
 }
