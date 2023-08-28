@@ -25,8 +25,22 @@ We always start the app in its default session configuration of:
 - Mode: `.spokenAudio`
 - Policy: `.longFormAudio`
 
-### Instantiation
+### Launch the `AudioConductor`
 
 Once we have done the necessary setup of our audio configuration, we can init
 the `AudioConductor` which is the simple class we use to manage AudioKit's
 audio objects and resources.
+
+```swift
+
+struct AViewOfSomeKind: View {
+    @StateObject var conductor = AudioConductor()
+
+    //setup UI view stuff
+}
+```
+
+By doing this you now have access to all audio features provided by `AudioKit`.
+
+#### Starting and Stopping `AudioConductor`
+> TBD
