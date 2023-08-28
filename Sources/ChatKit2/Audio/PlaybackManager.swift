@@ -73,6 +73,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                         }
                     }
                 default:
+                    Log(self.playbackState, self.player.status)
                     break
                 }
             }
@@ -127,14 +128,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
             DispatchQueue.main.async {
                 self.nowPlayableMessage = msg
             }
-        }
-    }
-    
-    public func play(msg: Message) {
-        do {
-            try load(msg: msg)
-        } catch {
-            Log(error)
         }
     }
 
