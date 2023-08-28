@@ -65,8 +65,8 @@ class IOSNowPlayableBehavior: NowPlayable {
         
         interruptionObserver = NotificationCenter.default.addObserver(forName: AVAudioSession.interruptionNotification,
                                                                       object: audioSession,
-                                                                      queue: .main) {
-            [unowned self] notification in
+                                                                      queue: .main) { notification in
+            // [unowned self] notification in
             self.handleAudioSessionInterruption(notification: notification)
         }
         
