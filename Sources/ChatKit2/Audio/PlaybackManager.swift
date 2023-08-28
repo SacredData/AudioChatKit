@@ -154,8 +154,9 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     }
     
     public func setupOutputTap(inputNode: Node) -> RawDataTap {
-        return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInteractive), handler: { _ in
+        return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInteractive), handler: { floats in
             if self.tapStartTime != nil {
+                self.audioCalc.updateDbArray(floats)
                 //self.currentProgress = Float(self.player.currentPosition)
                 //self.currentTime = self.player.currentTime
                 self.updateNowPlayingProgress()
