@@ -84,3 +84,6 @@ let fileURL: URL = // get local file URL somehow...
 let msg = Message(audioFile: AVAudioFile(forReading: fileURL))
 try conductor.playerMan.newLocalMessage(msg: msg)
 ```
+
+Note: if the player is currently playing something, `playerMan` will add the new
+`Message` to its queue and execute playback in order received.
