@@ -59,7 +59,10 @@ struct AViewOfSomeKind: View {
 By doing this you now have access to all audio features provided by `AudioKit`.
 
 #### Starting and Stopping `AudioConductor`
-> TBD
+***DON'T DO IT***
+
+We implement automated start/stop functionality inside the classes to ensure no
+engineer ever thinks to use SwiftUI to manage resources ever again.
 
 ### Using the `PlaybackManager`
 The best way to access and utilize our playback tools is via `AudioConductor.playerMan`.
@@ -71,7 +74,13 @@ metadata needed for UI relating to playback progress.
 tracking!!*** Instead, read on to learn how to access the class-managed values.
 
 #### Time Metadata for UI
+##### Formatted Time String
+> For publishing real-time seconds elapsed to UI
+
 We publish time elapsed in seconds at [`PlaybackManager.currentTimeString`](https://github.com/Storyboard-fm/ChatKit/blob/341a4cef5cd8133b9d29391c32722c68f42e1566/Sources/ChatKit2/Audio/PlaybackManager.swift#L33).
+
+##### Progress Float
+> For use in SwiftUI as a `CGFloat`
 
 We also publish the float used to increment playback progress at [`PlaybackManager.currentProgress`](https://github.com/Storyboard-fm/ChatKit/blob/341a4cef5cd8133b9d29391c32722c68f42e1566/Sources/ChatKit2/Audio/PlaybackManager.swift#L27).
 
