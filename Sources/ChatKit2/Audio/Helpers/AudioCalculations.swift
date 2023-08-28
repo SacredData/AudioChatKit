@@ -43,6 +43,7 @@ public class AudioCalculations: ObservableObject {
         }
     }
     
+    /// For the provied audio buffer, returns the loudest moment in the file
     public func getPeak(audioBuffer: AVAudioPCMBuffer) -> AVAudioPCMBuffer.Peak {
         return audioBuffer.peak()!
     }
