@@ -87,7 +87,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     // The pending audio messages to play when player is freed up
     var messageQueue: [Message] = []
     var messageCompletions: [Message] = []
-    //var tap: RawDataTap?
 
     public init() {
         // Ensure we get AudioKit settings
@@ -115,6 +114,8 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         player.completionHandler = playbackCompletionHandler
     }
     
+    /// Make the playback manager aware of a new `Message` and play or queue
+    /// it immediately.
     public func newLocalMessage(msg: Message) throws {
         if player.isPlaying {
             messageQueue.append(msg)
@@ -123,6 +124,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         }
     }
     
+    /// Immediately change player's loaded `Message` and play it
     public func load(msg: Message) throws {
         let shouldBuffer = msg.audioFile.duration > 30
         try player.load(file: msg.audioFile, buffered: shouldBuffer)
@@ -135,6 +137,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         }
     }
 
+    /// Seek the player to the given `TimeInterval` for currently-loaded message
     public func seek(to time: TimeInterval) {
         DispatchQueue.global(qos: .userInteractive).async {
             switch self.playbackState {
@@ -152,19 +155,20 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
             }
         }
     }
-    
+
+    /// Creates an AudioKit `RawDataTap` responsible for incrementing playback
+    /// progress. Updates `NowPlayingInfo` with current playback state and metadata.
     public func setupOutputTap(inputNode: Node) -> RawDataTap {
         return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInteractive), handler: { floats in
             if self.tapStartTime != nil {
-                self.audioCalc.updateDbArray(floats)
-                //self.currentProgress = Float(self.player.currentPosition)
-                //self.currentTime = self.player.currentTime
                 self.updateNowPlayingProgress()
             }
         })
     }
-    
-    private func playMessage() {
+
+    /// Override any scheduled playback events or current playback state, and
+    /// immediately begin to play the currently-loaded `Message`.
+    public func playMessage() {
         DispatchQueue.global(qos: .userInitiated).async {
             switch self.playbackState {
             case .isScheduling(let aVAudioFile),
