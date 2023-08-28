@@ -17,6 +17,11 @@ public class AudioConfigHelper {
 
     public init() {
         initializeAudioKit()
+        do {
+            try setupDefaultSession()
+        } catch {
+            Log(error)
+        }
     }
     
     public func setRecordSession() throws {
