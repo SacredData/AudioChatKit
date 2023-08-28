@@ -22,6 +22,7 @@ public class AudioConfigHelper {
         } catch {
             Log(error)
         }
+        Log(Bundle.main.preferredLocalizations.first)
     }
     
     public func setRecordSession() throws {
