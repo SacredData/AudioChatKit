@@ -28,4 +28,7 @@ public final class Team {
             return members.contains(where: {$0.peerId == pid})
         })
     }
+    public func addMessages(messages: [Message]) {
+        self.messages?.append(contentsOf: messages)
+    }
 }
