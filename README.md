@@ -37,9 +37,9 @@ init() {
 
 We always start the app in its default session configuration of:
 
-- Category: `.playback`
-- Mode: `.spokenAudio`
-- Policy: `.longFormAudio`
+- Category: [`.playback`](https://developer.apple.com/documentation/avfaudio/avaudiosession/category/1616509-playback)
+- Mode: [`.spokenAudio`](https://developer.apple.com/documentation/avfaudio/avaudiosession/mode/1616510-spokenaudio)
+- Policy: [`.longFormAudio`](https://developer.apple.com/documentation/avfaudio/avaudiosession/routesharingpolicy/longformaudio)
 
 ### Launch the `AudioConductor`
 
@@ -60,6 +60,20 @@ By doing this you now have access to all audio features provided by `AudioKit`.
 
 #### Starting and Stopping `AudioConductor`
 > TBD
+
+### Using the `PlaybackManager`
+The best way to access and utilize our playback tools is via `AudioConductor.playerMan`.
+
+You must utilize this manager in order to get access to the class-managed timing
+metadata needed for UI relating to playback progress.
+
+***NEVER use a `Timer` or `Date` to do anything related to playback time
+tracking!!*** Instead, read on to learn how to access the class-managed values.
+
+#### Time Metadata for UI
+We publish time elapsed in seconds at [`PlaybackManager.currentTimeString`](https://github.com/Storyboard-fm/ChatKit/blob/341a4cef5cd8133b9d29391c32722c68f42e1566/Sources/ChatKit2/Audio/PlaybackManager.swift#L33).
+
+We also publish the float used to increment playback progress at [`PlaybackManager.currentProgress`](https://github.com/Storyboard-fm/ChatKit/blob/341a4cef5cd8133b9d29391c32722c68f42e1566/Sources/ChatKit2/Audio/PlaybackManager.swift#L27).
 
 ## Examples
 
