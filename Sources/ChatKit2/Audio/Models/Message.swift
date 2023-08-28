@@ -67,8 +67,4 @@ public final class Message {
     func setUsersListened(accountIds: [String]) {
         usersListened.append(contentsOf: accountIds)
     }
-    // TODO: Enable period updates to progress, time elapsed, etc.
-//    func updateDynamicMetadata() {
-//
-//    }
 }
