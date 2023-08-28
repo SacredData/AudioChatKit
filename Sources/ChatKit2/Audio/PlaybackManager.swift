@@ -25,12 +25,12 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
 
     /// Use this published value to update UI progress bar
     @Published var currentProgress: Float?
-    var currentTime: TimeInterval?
-    var currentTimeString: String? {
-        get {
-            return TimeHelper().formatDuration(duration: currentTime ?? 0.0)
+    var currentTime: TimeInterval? {
+        didSet {
+            currentTimeString = TimeHelper().formatDuration(duration: currentTime!)
         }
     }
+    @Published var currentTimeString: String?
     var currentFile: [String: AVAudioFile]?
     @Published var nowPlayableMessage: Message?
     var currentStatus: NodeStatus.Playback? {
