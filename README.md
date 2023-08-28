@@ -1,7 +1,7 @@
 # ChatKit2
 > Storyboard's iOS audio toolkit
 
-## Usage
+## Usage Guide
 
 ### Setup
 > Always do these things first!
@@ -44,3 +44,13 @@ By doing this you now have access to all audio features provided by `AudioKit`.
 
 #### Starting and Stopping `AudioConductor`
 > TBD
+
+## Examples
+
+### Create and play a new `Message`
+
+```swift
+let fileURL: URL = // get local file URL somehow...
+let msg = Message(audioFile: AVAudioFile(forReading: fileURL))
+try conductor.playerMan.newLocalMessage(msg: msg)
+```
