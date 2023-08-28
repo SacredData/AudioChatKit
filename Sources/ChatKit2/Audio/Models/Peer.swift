@@ -16,7 +16,7 @@ public final class Peer {
     // TODO: Use PhoneNumberKit
     let phoneNumber: String?
     let emailAddress: String?
-    public init(id: MCPeerID, name: String, me: Bool=false, teams: [Team], phoneNumber: String?, emailAddress: String?) {
+    public init(id: MCPeerID, name: String, teams: [Team], phoneNumber: String?, emailAddress: String?, me: Bool=false) {
         self.me = me // Is this the user logged-in to the app?
         self.peerId = id
         self.name = name
