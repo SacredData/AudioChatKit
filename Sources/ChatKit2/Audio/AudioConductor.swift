@@ -8,12 +8,12 @@
 import AudioKit
 import AVFoundation
 
-public class AudioConductor: ObservableObject {
+public class AudioConductor: ObservableObject, HasAudioEngine {
     static var shared: AudioConductor = AudioConductor()
     public let engineMan: AudioEngineManager = AudioEngineManager()
     public let playerMan: PlaybackManager = PlaybackManager()
     
-    let engine: AudioEngine
+    public let engine: AudioEngine
     let player: AudioPlayer
     let session: AVAudioSession
     let mixer: Mixer = Mixer()
@@ -23,8 +23,8 @@ public class AudioConductor: ObservableObject {
         session = engineMan.session
         player = playerMan.player
         
-        mixer.addInput(player)
-        engine.output = mixer
+        //mixer.addInput(player)
+        engine.output = player
         Log(engine.connectionTreeDescription)
     }
 }

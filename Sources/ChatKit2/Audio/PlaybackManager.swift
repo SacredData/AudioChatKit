@@ -166,9 +166,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     private func startPlaybackAudioEngine() {
         do {
             try configurePlaybackSession()
-            if !engine.avEngine.isRunning {
-                try engine.start()
-            }
         } catch {
             return
         }
