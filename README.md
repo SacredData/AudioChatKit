@@ -1,6 +1,22 @@
 # ChatKit2
 > Storyboard's iOS audio toolkit
 
+## About
+ChatKit2 is a Swift Package meant to establish and solidify important audio
+standards that our app must follow to be `NowPlayable`. In so-doing, we setup
+the iOS app developers for success by removing the need to maintain a thorough
+understanding of the Apple ecosystem's intense audio implementation requirements.
+
+The code in this package is meant to be relatively static and unchanging. If we
+need to make any modifications to this package, it is because we have expanded
+our application's business requirements such that new standards must now be
+achieved, or because Apple's own internal standards/requirements have been
+changed.
+
+### Development
+All changes to this library, once implemented into Chat by Storyboard for iOS,
+will be required to go through code review via GitHub pull request.
+
 ## Usage Guide
 
 ### Setup
