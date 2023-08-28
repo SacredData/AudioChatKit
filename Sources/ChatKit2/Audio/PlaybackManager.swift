@@ -43,6 +43,8 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         didSet {
             DispatchQueue.global(qos: .userInitiated).async {
                 switch self.playbackState {
+                case .isBuffering:
+                    self.playMessage()
                 case .isPaused:
                     // Do not end the playback session but be able to be interrupted
                     if self.player.status != .paused {
@@ -213,8 +215,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     }
     
     private func updateNowPlayingProgress() {
-        let theTimeRightNow = AVAudioTime.extrapolateTime(tapStartTime!)
-        Log(theTimeRightNow)
         var isPlayingNow = false
         switch playbackState {
         case .isPlaying:
