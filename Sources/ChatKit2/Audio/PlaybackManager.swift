@@ -19,6 +19,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     var session: AVAudioSession
 
     var nowPlayable: Bool = false
+    var remoteCommands: [NowPlayableCommand] = []
     
     var tapStartTime: AVAudioTime?
     var playackTime: TimeInterval?
@@ -113,6 +114,8 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         }
         
         player.completionHandler = playbackCompletionHandler
+        
+        setupRemoteCommands()
     }
     
     /// Make the playback manager aware of a new `Message` and play or queue
@@ -185,6 +188,17 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
             }
         }
     }
+    
+    public func pause() {
+        if player.status == .playing {
+            player.pause()
+            if player.status == .paused {
+                playbackState = PlaybackState.isPaused(player.file)
+            }
+        } else {
+            return
+        }
+    }
 
     private func startPlaybackAudioEngine() {
         do {
@@ -248,6 +262,36 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                     metadata: NowPlayableDynamicMetadata(rate: player.playerNode.rate, position: Float(player.currentPosition), duration: Float(player.duration), currentLanguageOptions: [currentLO!], availableLanguageOptionGroups: [loGroup]))
             }
         }
+    }
+    
+    private func setupRemoteCommands() {
+        NowPlayableCommand.pause.remoteCommand.addTarget { event in
+            if !self.nowPlayable {
+                Log("remote pause command failed: no nowplayable item")
+                return .noActionableNowPlayingItem
+            }
+            if self.player.status == NodeStatus.Playback.paused {
+                Log("remote pause command failed: already paused")
+                return .commandFailed
+            }
+            self.pause()
+            return .success
+        }
+        remoteCommands.append(NowPlayableCommand.pause)
+        
+        NowPlayableCommand.play.remoteCommand.addTarget { event in
+            if !self.nowPlayable {
+                Log("remote play command failed: no nowplayable item")
+                return .noActionableNowPlayingItem
+            }
+            if self.player.status == NodeStatus.Playback.playing {
+                Log("remote play command failed: already playing")
+                return .commandFailed
+            }
+            self.playMessage()
+            return .success
+        }
+        remoteCommands.append(NowPlayableCommand.play)
     }
 }
 

@@ -24,7 +24,6 @@ struct ChatKitDemoApp: App {
       Log(configurator.sessionPreferencesAreValid)
         preferredLocalization = configurator.preferredLocalization ?? "blah"
         Log(preferredLocalization)
-        Log(preferredLocalization)
     }
   
     var body: some Scene {
