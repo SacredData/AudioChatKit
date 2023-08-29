@@ -61,8 +61,8 @@ By doing this you now have access to all audio features provided by `AudioKit`.
 #### Starting and Stopping `AudioConductor`
 ***DON'T DO IT***
 
-We implement automated start/stop functionality inside the classes to ensure no
-engineer ever thinks to use SwiftUI to manage resources ever again.
+We implement automated start/stop functionality inside the classes so you don't
+have to manage these concerns in the first place.
 
 ### Using the `PlaybackManager`
 The best way to access and utilize our playback tools is via `AudioConductor.playerMan`.
