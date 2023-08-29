@@ -31,5 +31,11 @@ public class AudioConductor: ObservableObject, HasAudioEngine {
 
         outputTap = playerMan.setupOutputTap(inputNode: player)
         outputTap.start()
+        
+        do {
+            try engine.start()
+        } catch {
+            Log(error)
+        }
     }
 }

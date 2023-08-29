@@ -37,7 +37,6 @@ struct ChatKitDemoApp: App {
 //
 //        let file = try! AVAudioFile(forReading: filename!)
 //        let message = Message(audioFile: file, author: nil)
-//        conductor.start()
 //        try! conductor.playerMan.newLocalMessage(msg: message)
         // TODO: END
     }
