@@ -13,7 +13,7 @@ struct ContentView: View {
   @Binding var audioConfigHelper: AudioConfigHelper
   @Binding var isPlaying: Bool
   @Binding var text: String
-  
+
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -48,7 +48,7 @@ struct ContentView_Previews: PreviewProvider {
     @State var audioConfigHelper: AudioConfigHelper = .init()
     @State var text: String = "Hi Tyler"
     @State var isPlaying: Bool = false
-    
+
     var body: some View {
       ContentView(audioConfigHelper: $audioConfigHelper, // '$' is the passing by reference
                   isPlaying: $isPlaying,

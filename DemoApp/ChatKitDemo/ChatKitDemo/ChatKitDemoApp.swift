@@ -13,17 +13,19 @@ import SwiftUI
 struct ChatKitDemoApp: App {
   @State var configurator: AudioConfigHelper = .init()
   @State var isPlaying: Bool = false
-  
-    /*let conductor: AudioConductor
-    let engine: AudioEngine
-    let player: AudioPlayer*/
+  @State var conductor: AudioConductor = .shared
+
+  var engine: AudioEngine?
+  var player: AudioPlayer?
   var preferredLocalization: String = ""
   
     init() {
-//        configurator = AudioConfigHelper()
       Log(configurator.sessionPreferencesAreValid)
         preferredLocalization = configurator.preferredLocalization ?? "blah"
         Log(preferredLocalization)
+        
+        engine = conductor.engine
+        player = conductor.playerMan.player
     }
   
     var body: some Scene {

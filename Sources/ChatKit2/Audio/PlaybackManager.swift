@@ -292,6 +292,26 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
             return .success
         }
         remoteCommands.append(NowPlayableCommand.play)
+        
+        NowPlayableCommand.stop.remoteCommand.addTarget { event in
+            if !self.nowPlayable {
+                Log("remote stop command failed: no nowplayable item")
+                return .noActionableNowPlayingItem
+            }
+            if self.player.status == NodeStatus.Playback.stopped {
+                Log("remote stop command failed: already stopped")
+                return .commandFailed
+            }
+            self.player.stop()
+            if self.player.status != NodeStatus.Playback.stopped {
+                return .commandFailed
+            }
+            self.playbackState = PlaybackState.isStopped
+            return .success
+        }
+        remoteCommands.append(NowPlayableCommand.stop)
+        
+        Log(remoteCommands)
     }
 }
 
