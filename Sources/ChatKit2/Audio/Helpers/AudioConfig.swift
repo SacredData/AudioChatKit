@@ -8,8 +8,9 @@
 
 import AudioKit
 import AVFoundation
+import SwiftUI
 
-public class AudioConfigHelper {
+public class AudioConfigHelper: ObservableObject {
     static var shared: AudioConfigHelper = AudioConfigHelper()
     public var sessionPreferencesAreValid: Bool?
     public var preferredLocalization: String?
