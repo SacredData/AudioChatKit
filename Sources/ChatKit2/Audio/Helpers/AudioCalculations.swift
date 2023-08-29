@@ -17,6 +17,8 @@ public class AudioCalculations: ObservableObject {
     var dbFloatsUI: [Float] = [10.0, 10.0, 10.0]
     var recDbRMS: Float = .nan
 
+    let outputFormat: AVAudioFormat = AudioFormats.global
+
     /// Every audio callback containing floats, call this function to re-calculate
     /// audio dB RMS and modify the CGFloats used in the UI to provide
     /// audio input visualizations.
@@ -46,5 +48,23 @@ public class AudioCalculations: ObservableObject {
     /// For the provied audio buffer, returns the loudest moment in the file
     public func getPeak(audioBuffer: AVAudioPCMBuffer) -> AVAudioPCMBuffer.Peak {
         return audioBuffer.peak()!
+    }
+
+    public func bufferFromFloats(floats: [Floats]) -> AVAudioPCMBuffer {
+        var f: [Float] = []
+        f.append(contentsOf: floats)
+
+        f.withUnsafeMutableBufferPointer { bytes in
+            let ab = AudioBuffer(
+                mNumberChannels: 1,
+                mDataByteSize: UInt32(bytes.count * MemoryLayout<Float>.size),
+                mData: bytes.baseAddress)
+            var bl = AudioBufferList(mNumberBuffers: 1, mBuffers: ab)
+            let ob = AVAudioPCMBuffer(pcmFormat: player.outputFormat, bufferListNoCopy: &bl)!
+            Log(ob.frameLength)
+            Log(ob.floatChannelData)
+            let pk = audioCalc.getPeak(audioBuffer: ob)
+            Log(pk)
+        }
     }
 }
