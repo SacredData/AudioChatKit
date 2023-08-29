@@ -103,9 +103,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
             self.currentProgress = 0.0
             let queuedMessages = self.messageQueue.count
             if queuedMessages > 0 {
-                // We need to pop the next message from the queue and play
                 let nextMessage = self.messageQueue.removeFirst()
-                // TODO: React to this change in state and begin to load and buffer the message
                 self.playbackState = PlaybackState.isBuffering(nextMessage.audioFile)
             } else {
                 // We ain't got nothin' so lets just sit there and wait
