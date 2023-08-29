@@ -25,7 +25,7 @@ will be required to go through code review via GitHub pull request.
 |----------------------------------|------|
 |Audio message duration            | [`TimeInterval`](https://developer.apple.com/documentation/foundation/timeinterval)|
 |Message creation date      | [`ISO8601DateFormatter`](https://developer.apple.com/documentation/foundation/iso8601dateformatter)|
-|Playback tracking  | [`AVAudioTime`](https://developer.apple.com/documentation/avfaudio/avaudiotime)|
+|Playback progress tracking  | [`AVAudioTime`](https://developer.apple.com/documentation/avfaudio/avaudiotime)|
 #### Audio Nodes
 | Use Case | Type |
 |------------------|------|
