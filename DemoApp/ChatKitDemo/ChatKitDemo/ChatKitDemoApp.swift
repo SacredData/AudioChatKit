@@ -6,6 +6,7 @@
 //
 
 import AudioKit
+import AVFoundation
 import ChatKit2
 import SwiftUI
 
@@ -26,6 +27,19 @@ struct ChatKitDemoApp: App {
         
         engine = conductor.engine
         player = conductor.playerMan.player
+        // TODO: Remove this stuff
+        let fileDir = FileManager.default.urls(for: .documentDirectory,
+                                               in: .userDomainMask).first
+        Log(fileDir)
+
+        let filename = fileDir?.appendingPathComponent("SMOLD_020.mp3")
+        Log(filename)
+        
+        let file = try! AVAudioFile(forReading: filename!)
+        let message = Message(audioFile: file, author: nil)
+        conductor.start()
+        try! conductor.playerMan.newLocalMessage(msg: message)
+        // TODO: END
     }
   
     var body: some Scene {
