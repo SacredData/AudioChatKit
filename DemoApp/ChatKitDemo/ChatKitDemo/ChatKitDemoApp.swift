@@ -11,9 +11,16 @@ import SwiftUI
 
 @main
 struct ChatKitDemoApp: App {
+    let configurator: AudioConfigHelper
+    let conductor: AudioConductor
+    let preferredLocalization: String
     init() {
-        let configurator = AudioConfigHelper()
+        configurator = AudioConfigHelper()
         Log(configurator.sessionPreferencesAreValid)
+        preferredLocalization = configurator.preferredLocalization!
+        Log(preferredLocalization)
+
+        conductor = AudioConductor()
     }
     var body: some Scene {
         WindowGroup {

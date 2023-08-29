@@ -12,6 +12,7 @@ import AVFoundation
 public class AudioConfigHelper {
     static var shared: AudioConfigHelper = AudioConfigHelper()
     public var sessionPreferencesAreValid: Bool?
+    public var preferredLocalization: String?
     var recordingFormatIsValid: Bool?
     var playbackFormatIsValid: Bool?
 
@@ -22,7 +23,7 @@ public class AudioConfigHelper {
         } catch {
             Log(error)
         }
-        Log(Bundle.main.preferredLocalizations.first)
+        preferredLocalization = Bundle.main.preferredLocalizations.first
     }
     
     public func setRecordSession() throws {
