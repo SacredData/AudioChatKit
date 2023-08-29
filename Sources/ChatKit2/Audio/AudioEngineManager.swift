@@ -19,6 +19,8 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
     public let player: AudioPlayer
     public let engine: AudioEngine
     public var recorder: NodeRecorder?
+    public var inputNode: AudioEngine.InputNode?
+    public var recEngine: AudioEngine?
     let session: AVAudioSession = AVAudioSession.sharedInstance()
     let outputMixer: AVAudioMixerNode
 
@@ -55,18 +57,20 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
     }
     
     public func setupRecorder() throws {
-        let recEngine = AudioEngine()
-        let inputNode = try instantiateInput(eng: recEngine)
-        let recMixer = Mixer([inputNode])
-        recorder = try NodeRecorder(node: inputNode, shouldCleanupRecordings: true) { floats, time in
+        recEngine = AudioEngine()
+        let input = try instantiateInput(eng: recEngine!)
+        let recMixer = Mixer([input])
+        inputNode = input
+        recorder = try NodeRecorder(node: input, shouldCleanupRecordings: true) { floats, time in
             Log(floats, time)
             AudioCalculations().updateDbArray(floats)
         }
-        Log(recorder)
+        /*
         recEngine.output = recMixer
         try recEngine.start()
         Log(recMixer.connections)
         Log(recEngine.connectionTreeDescription)
         try recorder?.record()
+        */
     }
 }
