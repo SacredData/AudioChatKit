@@ -11,7 +11,7 @@ import AVFoundation
 
 public class AudioConfigHelper {
     static var shared: AudioConfigHelper = AudioConfigHelper()
-    var sessionPreferencesAreValid: Bool?
+    public var sessionPreferencesAreValid: Bool?
     var recordingFormatIsValid: Bool?
     var playbackFormatIsValid: Bool?
 
