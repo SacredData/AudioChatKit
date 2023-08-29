@@ -12,6 +12,7 @@ public class AudioConductor: ObservableObject, HasAudioEngine {
     static var shared: AudioConductor = AudioConductor()
     public let engineMan: AudioEngineManager = AudioEngineManager()
     public let playerMan: PlaybackManager = PlaybackManager()
+    public let recordMan: RecordingManager = RecordingManager()
     public let audioCalc: AudioCalculations = AudioCalculations()
     
     public let engine: AudioEngine
