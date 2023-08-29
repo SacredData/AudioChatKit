@@ -228,15 +228,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         // TODO: Make the msg arg optional and when not provided we should use
         // self.nowPlayableMessage by default. Catch and log error when that
         // is not defined...
-        IOSNowPlayableBehavior().handleNowPlayableItemChange(metadata: NowPlayableStaticMetadata(
-            assetURL: msg.audioFile.url,
-            mediaType: .audio,
-            isLiveStream: false,
-            title: msg.title,
-            artist: msg.author,
-            artwork: nil,
-            albumArtist: msg.author,
-            albumTitle: msg.teamName))
+        IOSNowPlayableBehavior().handleNowPlayableItemChange(metadata: msg.staticMetadata)
     }
     
     private func updateNowPlayingProgress() {

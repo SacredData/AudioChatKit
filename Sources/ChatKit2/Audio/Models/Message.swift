@@ -22,7 +22,8 @@ import AVFoundation
 
 public final class Message {
     let audioFile: AVAudioFile
-    let author: String
+    let author: Peer
+    let authorName: String
     let date: Date
     let duration: TimeInterval
     let feedId: String
@@ -39,12 +40,13 @@ public final class Message {
     var spokenLanguage: String?
     var usersListened: [String] = []
 
-    var staticMetadata: NowPlayableStaticMetadata?
+    var staticMetadata: NowPlayableStaticMetadata
     var dynamicMetadata: NowPlayableDynamicMetadata?
 
-    public init(audioFile: AVAudioFile, author: String="", date: String="", feedId: String="", teamName: String="", title: String="") {
+    public init(audioFile: AVAudioFile, author: Peer, date: String="", feedId: String="", teamName: String="", title: String="") {
         self.audioFile = audioFile
         self.author = author
+        self.authorName = author.name
         self.date = ISO8601DateFormatter().date(from: date) ?? Date()
         self.duration = audioFile.duration
         self.feedId = feedId
@@ -52,7 +54,8 @@ public final class Message {
         self.title = title
         self.uploadId = audioFile.url.lastPathComponent.replacingOccurrences(of: ".caf", with: "")
         // TODO: Put artwork property into the static metadata
-        self.staticMetadata = NowPlayableStaticMetadata(assetURL: self.audioFile.url, mediaType: .audio, isLiveStream: false, title: title, artist: author, artwork: nil, albumArtist: author, albumTitle: teamName)
+        self.staticMetadata = NowPlayableStaticMetadata(assetURL: self.audioFile.url, mediaType: .audio, isLiveStream: false, title: title, artist: authorName, artwork: nil, albumArtist: authorName, albumTitle: teamName)
+        self.spokenLanguage = author.locale?.identifier ?? "en-US"
     }
     /// Attach the `Transcript` belonging to this message
     /// This also sets the message's spoken language property
