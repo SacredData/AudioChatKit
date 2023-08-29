@@ -19,6 +19,22 @@ will be required to go through code review via GitHub pull request.
 
 ## Usage Guide
 
+### Types
+#### Dates & Times
+| Use Case | Type |
+|----------------------------------|------|
+|Audio message duration            | [`TimeInterval`](https://developer.apple.com/documentation/foundation/timeinterval)|
+|Message creation date      | [`ISO8601DateFormatter`](https://developer.apple.com/documentation/foundation/iso8601dateformatter)|
+|Message progress tracking  | [`AVAudioTime`](https://developer.apple.com/documentation/avfaudio/avaudiotime)|
+#### Audio Nodes
+| Use Case | Type |
+|------------------|------|
+|Audio engine  | [`AudioKit.AudioEngine`](https://www.audiokit.io/AudioKit/documentation/audiokit/audioengine)|
+|Audio player | [`AudioKit.AudioPlayer`](https://www.audiokit.io/AudioKit/documentation/audiokit/audioplayer)|
+|Audio recorder | [`AudioKit.NodeRecorder`](https://www.audiokit.io/AudioKit/documentation/audiokit/noderecorder)|
+|Mixer | [`AudioKit.Mixer`](https://www.audiokit.io/AudioKit/documentation/audiokit/mixer)|
+|Playback tap | [`AudioKit.RawDataTap`](https://www.audiokit.io/AudioKit/documentation/audiokit/audioplayer)|
+
 ### Setup
 > Always do these things first!
 
