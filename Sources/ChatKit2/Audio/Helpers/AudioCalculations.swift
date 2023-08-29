@@ -17,7 +17,7 @@ public class AudioCalculations: ObservableObject {
     var dbFloatsUI: [Float] = [10.0, 10.0, 10.0]
     var recDbRMS: Float = .nan
 
-    let outputFormat: AVAudioFormat = AudioFormats.global
+    let outputFormat: AVAudioFormat = AudioFormats.global!
 
     /// Every audio callback containing floats, call this function to re-calculate
     /// audio dB RMS and modify the CGFloats used in the UI to provide
@@ -50,20 +50,21 @@ public class AudioCalculations: ObservableObject {
         return audioBuffer.peak()!
     }
 
-    public func bufferFromFloats(floats: [Floats]) -> AVAudioPCMBuffer {
+    // TODO: Finish this up and make it do something useful
+    public func bufferFromFloats(floats: [Float]) {
         var f: [Float] = []
         f.append(contentsOf: floats)
 
         f.withUnsafeMutableBufferPointer { bytes in
             let ab = AudioBuffer(
-                mNumberChannels: 1,
+                mNumberChannels: 2,
                 mDataByteSize: UInt32(bytes.count * MemoryLayout<Float>.size),
                 mData: bytes.baseAddress)
             var bl = AudioBufferList(mNumberBuffers: 1, mBuffers: ab)
-            let ob = AVAudioPCMBuffer(pcmFormat: player.outputFormat, bufferListNoCopy: &bl)!
+            let ob = AVAudioPCMBuffer(pcmFormat: self.outputFormat, bufferListNoCopy: &bl)!
             Log(ob.frameLength)
             Log(ob.floatChannelData)
-            let pk = audioCalc.getPeak(audioBuffer: ob)
+            let pk = self.getPeak(audioBuffer: ob)
             Log(pk)
         }
     }

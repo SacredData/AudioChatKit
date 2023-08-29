@@ -163,7 +163,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInitiated), handler: { floats in
             if self.tapStartTime != nil {
                 self.updateNowPlayingProgress()
-                //try! self.bufferFromFloats(floats: floats)
+                //self.audioCalc.bufferFromFloats(floats: floats)
             }
         })
     }
