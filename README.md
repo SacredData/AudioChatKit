@@ -3,7 +3,7 @@
 
 ## About
 ChatKit2 is a Swift Package meant to establish and solidify important audio
-standards that our app must follow to be `NowPlayable`. In so-doing, we setup
+standards that our app must follow to be [`NowPlayable`][np]. In so-doing, we setup
 the iOS app developers for success by removing the need to maintain a thorough
 understanding of the Apple ecosystem's intense audio implementation requirements.
 
@@ -61,8 +61,8 @@ By doing this you now have access to all audio features provided by `AudioKit`.
 #### Starting and Stopping `AudioConductor`
 ***DON'T DO IT***
 
-We implement automated start/stop functionality inside the classes to ensure no
-engineer ever thinks to use SwiftUI to manage resources ever again.
+We implement automated start/stop functionality inside the classes so you don't
+have to manage these concerns in the first place.
 
 ### Using the `PlaybackManager`
 The best way to access and utilize our playback tools is via `AudioConductor.playerMan`.
@@ -96,3 +96,19 @@ try conductor.playerMan.newLocalMessage(msg: msg)
 
 Note: if the player is currently playing something, `playerMan` will add the new
 `Message` to its queue and execute playback in order received.
+
+### Introspect the currently-loaded `Message`
+
+```swift
+// picking up from previous message playback example above
+try conductor.playerMan.newLocalMessage(msg: msg)
+Log(conductor.playerMan.nowPlayableMessage) // this is the "now playing" audio message
+// Some example properties of the `Message` struct:
+Log(conductor.playerMan.nowPlayableMessage.audioFile.url)
+Log(conductor.playerMan.nowPlayableMessage.audioFile.duration)
+Log(conductor.playerMan.nowPlayableMessage.author)
+Log(conductor.playerMan.nowPlayableMessage.staticMetadata)
+```
+
+
+[np]: https://developer.apple.com/documentation/mediaplayer/becoming_a_now_playable_app
