@@ -163,7 +163,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     /// Creates an AudioKit `RawDataTap` responsible for incrementing playback
     /// progress. Updates `NowPlayingInfo` with current playback state and metadata.
     public func setupOutputTap(inputNode: Node) -> RawDataTap {
-        return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInteractive), handler: { floats in
+        return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInitiated), handler: { _ in
             if self.tapStartTime != nil {
                 self.updateNowPlayingProgress()
             }

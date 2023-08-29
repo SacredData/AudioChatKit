@@ -32,3 +32,17 @@ public final class Team {
         self.messages?.append(contentsOf: messages)
     }
 }
+
+public final class Feed {
+    let team: Team
+    var items: [Date: Message]? = [:]
+    public init(team: Team) {
+        self.team = team
+    }
+    public func addItem(item: Message) {
+        items?.updateValue(item, forKey: item.date)
+    }
+    public func removeItem(item: Message) {
+        items?.removeValue(forKey: item.date)
+    }
+}
