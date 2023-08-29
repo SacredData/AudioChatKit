@@ -311,6 +311,20 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         }
         remoteCommands.append(NowPlayableCommand.stop)
         
+        NowPlayableCommand.changePlaybackPosition.remoteCommand.addTarget { event in
+            if !self.nowPlayable {
+                Log("remote seek command failed: no nowplayable item")
+                return .noActionableNowPlayingItem
+            }
+            if event.timestamp > self.player.duration || event.timestamp < 0.0 {
+                Log("remote seek command failed: invalid seek time provided")
+                return .commandFailed
+            }
+            self.seek(to: event.timestamp)
+            return .success
+        }
+        remoteCommands.append(NowPlayableCommand.changePlaybackPosition)
+
         Log(remoteCommands)
     }
 }

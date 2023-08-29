@@ -18,6 +18,7 @@ class IOSNowPlayableBehavior: NowPlayable {
                 .pause, // stop audio playback
                 .nextTrack, // skip audio message playing in hands-free mode
                 .previousTrack, // start current audio message over again in hands-free mode
+                .changePlaybackPosition,
                 .changePlaybackRate,
                 .enableLanguageOption,
                 .disableLanguageOption
@@ -28,8 +29,7 @@ class IOSNowPlayableBehavior: NowPlayable {
         
         // By default, no commands are disabled.
         
-        return [.changePlaybackPosition, // no seeking in scope for now
-                .skipForward, // no seeking in scope for now
+        return [.skipForward, // no seeking in scope for now
                 .skipBackward // no seeking in scope for now
         ]
     }
