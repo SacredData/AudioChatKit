@@ -24,9 +24,9 @@ public class MessageDownloader: ObservableObject {
         Log(avAsset)
         let chars = try await assetCharacteristics(asset: avAsset)
         try await msg.getAssetTracks()
-        guard let tracks = msg.tracks else { return }
-        Log(tracks)
-        let fmt = try await assetTrackCharacteristics(track: tracks.first!)
+        guard let track = msg.tracks!.first else { return }
+        Log(track)
+        let fmt = try await assetTrackCharacteristics(track: track)
         Log(fmt)
     }
     
