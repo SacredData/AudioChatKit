@@ -23,6 +23,10 @@ struct ContentView: View {
           
           Text(audioConfigHelper.preferredLocalization ?? "none") // ?? used to specify default value in case preceeding is nil (Swift's version of null)
             .background(.yellow)
+            
+          Text(audioConfigHelper.playbackFormatIsValid! ? "playback formatIsValid" : "playback format is not valid")
+          
+            Text(audioConfigHelper.recordingFormatIsValid! ? "recording formatIsValid" : "recording format is not valid")
           
           // Try clicking on the play button
           Button(action: {
