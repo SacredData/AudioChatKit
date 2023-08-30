@@ -14,10 +14,15 @@ public class AudioConfigHelper: ObservableObject {
     static var shared: AudioConfigHelper = AudioConfigHelper()
     public var sessionPreferencesAreValid: Bool?
     public var preferredLocalization: String?
-    var recordingFormatIsValid: Bool?
-    var playbackFormatIsValid: Bool?
+    
+    public let recordFormat: AVAudioFormat
+    public let playbackFormat: AVAudioFormat
+    public var recordingFormatIsValid: Bool?
+    public var playbackFormatIsValid: Bool?
 
     public init() {
+        recordFormat = AudioFormats.record!
+        playbackFormat = AudioFormats.global!
         initializeAudioKit()
         do {
             try setupDefaultSession()
@@ -25,6 +30,8 @@ public class AudioConfigHelper: ObservableObject {
             Log(error)
         }
         preferredLocalization = Bundle.main.preferredLocalizations.first
+        validateAudioFormatForPlayback(audioFormat: playbackFormat)
+        validateAudioFormatForRecording(audioFormat: recordFormat)
     }
     
     public func setRecordSession() throws {
