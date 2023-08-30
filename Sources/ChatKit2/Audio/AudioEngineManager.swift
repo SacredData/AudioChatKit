@@ -24,6 +24,15 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
     let session: AVAudioSession = AVAudioSession.sharedInstance()
     let outputMixer: AVAudioMixerNode
 
+    var eqLow: ParametricEQ?
+    var eqLowMid: ParametricEQ?
+    var eqMid: ParametricEQ?
+    var eqHigh: ParametricEQ?
+    
+    var fastCompressor: Compressor?
+    var slowCompressor: Compressor?
+    var limiter: PeakLimiter?
+
     public init() {
         engine = AudioEngine()
         Log(engine)
@@ -34,13 +43,13 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
     }
 
     private func setupOutputMixing(node: Node) {
-        let eqLow = ParametricEQ(node, centerFreq: 150, q: 0.1, gain: 1)
-        let eqLowMid = ParametricEQ(eqLow, centerFreq: 800, q: 5, gain: -3.5)
-        let eqMid = ParametricEQ(eqLowMid, centerFreq: 4000, q: 5, gain: 1.5)
-        let eqHigh = ParametricEQ(eqMid, centerFreq: 10000, q: 0.2, gain: 0.5)
-        let fastCompressor = Compressor(eqHigh, threshold: -15.0, headRoom:5.0, attackTime: 0.001, releaseTime: 0.15, masterGain: 1.0)
-        let slowCompressor = Compressor(fastCompressor, threshold: -25.0, headRoom:5.0, attackTime: 0.12, releaseTime: 0.4, masterGain: 1.0)
-        _ = PeakLimiter(slowCompressor, attackTime: 0.1, decayTime: 0.5, preGain: 2.0)
+        eqLow = ParametricEQ(node, centerFreq: 150, q: 0.1, gain: 1)
+        eqLowMid = ParametricEQ(eqLow!, centerFreq: 800, q: 5, gain: -3.5)
+        eqMid = ParametricEQ(eqLowMid!, centerFreq: 4000, q: 5, gain: 1.5)
+        eqHigh = ParametricEQ(eqMid!, centerFreq: 10000, q: 0.2, gain: 0.5)
+        fastCompressor = Compressor(eqHigh!, threshold: -15.0, headRoom:5.0, attackTime: 0.001, releaseTime: 0.15, masterGain: 1.0)
+        slowCompressor = Compressor(fastCompressor!, threshold: -25.0, headRoom:5.0, attackTime: 0.12, releaseTime: 0.4, masterGain: 1.0)
+        limiter = PeakLimiter(slowCompressor!, attackTime: 0.1, decayTime: 0.5, preGain: 2.0)
     }
 
     private func instantiateInput(eng: AudioEngine) throws -> AudioEngine.InputNode {
