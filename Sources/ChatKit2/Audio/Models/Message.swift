@@ -43,6 +43,8 @@ public final class Message {
     
     public var mediaSelection: AVMediaSelection?
     public var avAsset: AVAsset?
+    
+    var playbackEvents: [PlaybackEvents]?
 
     var staticMetadata: NowPlayableStaticMetadata
     var dynamicMetadata: NowPlayableDynamicMetadata?
@@ -85,5 +87,8 @@ public final class Message {
             }
             Log(avmsg)
         })
+    }
+    func newPlaybackEvent(events: [PlaybackEvents]) {
+        self.playbackEvents?.append(contentsOf: events)
     }
 }

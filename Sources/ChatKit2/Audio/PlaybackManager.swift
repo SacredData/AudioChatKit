@@ -50,10 +50,18 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                     if self.player.status != .paused {
                         self.player.pause()
                     }
+                    if let npmsg = self.nowPlayableMessage {
+                        npmsg.newPlaybackEvent(
+                            events: [PlaybackEvents.pause(Date(), self.player.currentTime)])
+                    }
                 case .isStopped:
                     // Explicitly stopping the player timeline means we end session
                     if self.player.status != .stopped {
                         self.player.stop()
+                    }
+                    if let npmsg = self.nowPlayableMessage {
+                        npmsg.newPlaybackEvent(
+                            events: [PlaybackEvents.stop(Date(), self.player.currentTime)])
                     }
                     self.endPlaybackSession()
                 case .isReady:
@@ -72,6 +80,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
 
                         if let npmsg = self.nowPlayableMessage {
                             if npmsg.audioFile == file {
+                                npmsg.newPlaybackEvent(events: [PlaybackEvents.play(Date())])
                                 self.changeNowPlayingItem(msg: npmsg)
                             }
                         }
@@ -97,6 +106,9 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         playbackState = PlaybackState.isWaiting
         
         let playbackCompletionHandler = {
+            if let npmsg = self.nowPlayableMessage {
+                npmsg.newPlaybackEvent(events: [PlaybackEvents.completion(Date())])
+            }
             self.tapStartTime = nil
             self.currentProgress = 0.0
             let queuedMessages = self.messageQueue.count

@@ -9,12 +9,12 @@
 import Foundation
 
 enum PlaybackEvents {
-    case play(Date?, Message?)
-    case stop(Date?, Message?, TimeInterval?)
-    case pause(Date?, Message?, TimeInterval?)
-    case resume(Date?, Message?, TimeInterval?)
-    case seek(Date?, Message?, [TimeInterval]?)
-    case completion(Date?, Message?)
+    case play(Date?)
+    case stop(Date?, TimeInterval?)
+    case pause(Date?, TimeInterval?)
+    case resume(Date?, TimeInterval?)
+    case seek(Date?, [TimeInterval]?)
+    case completion(Date?)
     case interruption
     case error
 }
