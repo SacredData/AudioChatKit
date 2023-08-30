@@ -199,8 +199,10 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
 
     private func startPlaybackAudioEngine() {
         do {
+            try engine.start()
             try configurePlaybackSession()
         } catch {
+            Log(error)
             return
         }
     }

@@ -10,7 +10,7 @@ import AVFoundation
 
 public class AudioConductor: ObservableObject, HasAudioEngine {
     public static var shared: AudioConductor = AudioConductor()
-    public let engineMan: AudioEngineManager = AudioEngineManager()
+    public let engineMan: AudioEngineManager = .shared
     public let playerMan: PlaybackManager = PlaybackManager()
 
     public let engine: AudioEngine
@@ -24,6 +24,12 @@ public class AudioConductor: ObservableObject, HasAudioEngine {
         player = playerMan.player
 
         engine.output = player
+        do {
+            try engine.start()
+        } catch {
+            Log(error)
+        }
+
         Log(engine.connectionTreeDescription)
 
         outputTap = playerMan.setupOutputTap(inputNode: player)

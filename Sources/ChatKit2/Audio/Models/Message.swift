@@ -18,33 +18,38 @@
  be sure to `attachTranslations` as well.
  */
 
+import AudioKit
 import AVFoundation
 
 public final class Message {
-    let audioFile: AVAudioFile
-    var author: Peer?
-    let authorName: String?
-    let date: Date
-    let duration: TimeInterval
-    let feedId: String
-    let teamName: String
-    let title: String
-    let uploadId: String
+    public let audioFile: AVAudioFile
+    public var author: Peer?
+    public let authorName: String?
+    public let date: Date
+    public let duration: TimeInterval
+    public let feedId: String
+    public let teamName: String
+    public let title: String
+    public let uploadId: String
     
-    var transcript: Transcript? {
+    public var transcript: Transcript? {
         didSet {
             self.spokenLanguage = transcript?.languageOption.languageTag
         }
     }
-    var translations: [Translation] = []
-    var spokenLanguage: String?
-    var usersListened: [String] = []
+    public var translations: [Translation] = []
+    public var spokenLanguage: String?
+    public var usersListened: [String] = []
+    
+    public var mediaSelection: AVMediaSelection?
+    public var avAsset: AVAsset?
 
     var staticMetadata: NowPlayableStaticMetadata
     var dynamicMetadata: NowPlayableDynamicMetadata?
 
     public init(audioFile: AVAudioFile, author: Peer?, date: String="", feedId: String="", teamName: String="", title: String="") {
         self.audioFile = audioFile
+        self.avAsset = AVAsset(url: audioFile.url)
         self.author = author
         self.authorName = author?.name ?? ""
         self.date = ISO8601DateFormatter().date(from: date) ?? Date()
@@ -59,15 +64,26 @@ public final class Message {
     }
     /// Attach the `Transcript` belonging to this message
     /// This also sets the message's spoken language property
-    func attachTranscript(transcript: Transcript) {
+    public func attachTranscript(transcript: Transcript) {
         self.transcript = transcript
     }
     /// Attach a `Translation` of this message's `Transcript`
-    func attachTranslations(translations: [Translation]) {
+    public func attachTranslations(translations: [Translation]) {
         self.translations.append(contentsOf: translations)
     }
     /// Set this when we know that a new user has listened to the message
-    func setUsersListened(accountIds: [String]) {
+    public func setUsersListened(accountIds: [String]) {
         usersListened.append(contentsOf: accountIds)
+    }
+    public func getDefaultMediaSelection() async {
+        let test1 = try! await self.avAsset?.load(.availableMediaCharacteristicsWithMediaSelectionOptions)
+        Log(test1)
+
+        self.avAsset?.loadMediaSelectionGroup(for: .audible, completionHandler: {avmsg, err in
+            if err != nil {
+                Log(err)
+            }
+            Log(avmsg)
+        })
     }
 }
