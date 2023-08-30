@@ -43,6 +43,7 @@ public final class Message {
     
     public var mediaSelection: AVMediaSelection?
     public var avAsset: AVAsset?
+    public var tracks: [AVAssetTrack]?
     
     var playbackEvents: [PlaybackEvents]?
 
@@ -87,6 +88,11 @@ public final class Message {
             }
             Log(avmsg)
         })
+    }
+    func getAssetTracks() async throws {
+        if self.avAsset != nil {
+            self.tracks?.append(contentsOf: try await (self.avAsset?.loadTracks(withMediaType: .audio))!)
+        }
     }
     func newPlaybackEvent(events: [PlaybackEvents]) {
         self.playbackEvents?.append(contentsOf: events)
