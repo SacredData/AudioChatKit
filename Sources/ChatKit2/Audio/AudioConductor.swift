@@ -14,16 +14,14 @@ public class AudioConductor: ObservableObject, HasAudioEngine {
     public let playerMan: PlaybackManager = PlaybackManager()
 
     public let engine: AudioEngine
-    let player: AudioPlayer
     let session: AVAudioSession
-    var outputTap: RawDataTap
+    public var outputTap: RawDataTap
     
     public init() {
         engine = engineMan.engine
         session = engineMan.session
-        player = playerMan.player
 
-        engine.output = player
+        engine.output = playerMan.player
         do {
             try engine.start()
         } catch {
@@ -32,7 +30,7 @@ public class AudioConductor: ObservableObject, HasAudioEngine {
 
         Log(engine.connectionTreeDescription)
 
-        outputTap = playerMan.setupOutputTap(inputNode: player)
+        outputTap = playerMan.setupOutputTap(inputNode: playerMan.player)
         outputTap.start()
     }
 }

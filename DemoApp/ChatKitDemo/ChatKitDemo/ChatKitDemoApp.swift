@@ -20,6 +20,7 @@ struct ChatKitDemoApp: App {
     init() {
         Log(configurator.sessionPreferencesAreValid)
         Log(preferredLocalization)
+        Log(conductor)
         // TODO: Remove this stuff
 //        let fileDir = FileManager.default.urls(for: .documentDirectory,
 //                                               in: .userDomainMask).first
