@@ -23,7 +23,10 @@ public class AudioConductor: ObservableObject, HasAudioEngine {
 
         engine.output = playerMan.player
         do {
-            try engine.start()
+            if !engine.avEngine.isRunning {
+                try engine.start()
+                Log(engine.avEngine.isRunning)
+            }
         } catch {
             Log(error)
         }
