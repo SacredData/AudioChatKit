@@ -35,9 +35,7 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
 
     public init() {
         engine = AudioEngine()
-        Log(engine)
         player = AudioPlayer()
-        Log(player)
         outputMixer = player.mixerNode
         setupOutputMixing(node: player)
     }
@@ -64,7 +62,7 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
         Log(eng.inputDevice)
         return input
     }
-    
+
     public func setupRecorder() throws {
         recEngine = AudioEngine()
         let input = try instantiateInput(eng: recEngine!)

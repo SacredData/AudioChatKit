@@ -17,11 +17,7 @@ public class AudioCalculations: ObservableObject {
     var dbFloatsUI: [Float] = [10.0, 10.0, 10.0]
     var recDbRMS: Float = .nan
     
-    var pcmOutputBuffer: AVAudioPCMBuffer? {
-        didSet {
-            Log(pcmOutputBuffer)
-        }
-    }
+    var pcmOutputBuffer: AVAudioPCMBuffer?
 
     /// Every audio callback containing floats, call this function to re-calculate
     /// audio dB RMS and modify the CGFloats used in the UI to provide
