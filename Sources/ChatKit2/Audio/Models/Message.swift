@@ -42,17 +42,7 @@ public final class Message {
     public var usersListened: [String] = []
     
     public var mediaSelection: AVMediaSelection?
-    public var avAsset: AVAsset? {
-        didSet {
-            Task {
-                do {
-                    try await self.getAssetTracks()
-                } catch {
-                    Log(error)
-                }
-            }
-        }
-    }
+    public var avAsset: AVAsset?
     public var tracks: [AVAssetTrack]?
     
     var playbackEvents: [PlaybackEvents]?
@@ -102,7 +92,7 @@ public final class Message {
     }
     func getAssetTracks() async throws {
         if self.avAsset != nil {
-            self.tracks?.append(contentsOf: try await (self.avAsset?.loadTracks(withMediaType: .audio))!)
+            self.tracks = try await (self.avAsset?.loadTracks(withMediaType: .audio))!
         }
     }
     func newPlaybackEvent(events: [PlaybackEvents]) {

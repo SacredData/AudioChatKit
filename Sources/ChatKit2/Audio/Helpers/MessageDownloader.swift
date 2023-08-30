@@ -18,6 +18,18 @@ public class MessageDownloader: ObservableObject {
         print("Message downloaded init'd")
     }
     
+    public func newRemoteMessage(url: URL) async throws {
+        let msg = Message(url: url, author: nil)
+        guard let avAsset = msg.avAsset else { return }
+        Log(avAsset)
+        let chars = try await assetCharacteristics(asset: avAsset)
+        try await msg.getAssetTracks()
+        guard let tracks = msg.tracks else { return }
+        Log(tracks)
+        let fmt = try await assetTrackCharacteristics(track: tracks.first!)
+        Log(fmt)
+    }
+    
     // TODO: WIP
     public func download(url: URL) async throws {
         // Create AVURLAsset from the URL first and get its properties
