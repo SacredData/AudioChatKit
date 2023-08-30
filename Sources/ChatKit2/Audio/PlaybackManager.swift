@@ -56,7 +56,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                         self.player.stop()
                     }
                     self.endPlaybackSession()
-                    try! self.audioEngineManager.setupRecorder()
                 case .isReady:
                     // Set this to indicate we can/should play
                     // DO NOT use .isPlaying
@@ -163,7 +162,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInitiated), handler: { floats in
             if self.tapStartTime != nil {
                 self.updateNowPlayingProgress()
-                //self.audioCalc.bufferFromFloats(floats: floats)
+                //self.audioCalc.bufferFromFloatsStereo(floats: floats)
             }
         })
     }
