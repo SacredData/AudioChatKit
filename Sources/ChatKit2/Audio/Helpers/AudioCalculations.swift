@@ -33,9 +33,9 @@ public class AudioCalculations: ObservableObject {
                        self.stride,
                        &self.recDbRMS,
                        n)
-           
+
             let appendVal = self.recDbRMS * 1000
-           
+
             self.dbFloatsUI.removeFirst()
             self.dbFloatsUI.append(appendVal > 40.0 ? 40.0 : appendVal)
             self.dbFloatsUI = vDSP.threshold(self.dbFloatsUI,
@@ -54,6 +54,7 @@ public class AudioCalculations: ObservableObject {
         return audioBuffer.peak()!
     }
 
+    /// For use with float array of stereo interleaved channel data
     public func bufferFromFloatsStereo(floats: [Float]) {
         var f: [Float] = []
         f.append(contentsOf: floats)
@@ -65,6 +66,21 @@ public class AudioCalculations: ObservableObject {
                 mData: bytes.baseAddress)
             var bl = AudioBufferList(mNumberBuffers: 1, mBuffers: ab)
             self.pcmOutputBuffer = AVAudioPCMBuffer(pcmFormat: AudioFormats.global!, bufferListNoCopy: &bl)!
+        }
+    }
+
+    /// For use with float array of mono channel data
+    public func bufferFromFloats(floats: [Float]) {
+        var f: [Float] = []
+        f.append(contentsOf: floats)
+
+        f.withUnsafeMutableBufferPointer { bytes in
+            let ab = AudioBuffer(
+                mNumberChannels: 1,
+                mDataByteSize: UInt32(bytes.count * MemoryLayout<Float>.size),
+                mData: bytes.baseAddress)
+            var bl = AudioBufferList(mNumberBuffers: 1, mBuffers: ab)
+            self.pcmOutputBuffer = AVAudioPCMBuffer(pcmFormat: AudioFormats.record!, bufferListNoCopy: &bl)!
         }
     }
 }
