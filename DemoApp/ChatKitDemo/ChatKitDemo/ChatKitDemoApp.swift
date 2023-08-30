@@ -21,6 +21,8 @@ struct ChatKitDemoApp: App {
         Log(configurator.sessionPreferencesAreValid)
         Log(preferredLocalization)
         Log(conductor)
+        Log(conductor.engine)
+        Log(conductor.playerMan.player)
         // TODO: Remove this stuff
 //        let fileDir = FileManager.default.urls(for: .documentDirectory,
 //                                               in: .userDomainMask).first
