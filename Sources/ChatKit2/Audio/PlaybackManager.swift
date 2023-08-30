@@ -9,7 +9,6 @@ import AVFoundation
 import MediaPlayer
 
 public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
-    private var audioConfig: AudioConfigHelper = .shared
     private var audioEngineManager: AudioEngineManager = .shared
     public let audioCalc: AudioCalculations = .shared
     public var engine: AudioKit.AudioEngine
