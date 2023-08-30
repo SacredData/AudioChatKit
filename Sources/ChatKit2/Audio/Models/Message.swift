@@ -22,7 +22,7 @@ import AudioKit
 import AVFoundation
 
 public final class Message {
-    public let audioFile: AVAudioFile
+    public var audioFile: AVAudioFile?
     public var author: Peer?
     public let authorName: String?
     public let date: Date
@@ -42,7 +42,17 @@ public final class Message {
     public var usersListened: [String] = []
     
     public var mediaSelection: AVMediaSelection?
-    public var avAsset: AVAsset?
+    public var avAsset: AVAsset? {
+        didSet {
+            Task {
+                do {
+                    try await self.getAssetTracks()
+                } catch {
+                    Log(error)
+                }
+            }
+        }
+    }
     public var tracks: [AVAssetTrack]?
     
     var playbackEvents: [PlaybackEvents]?
@@ -61,8 +71,20 @@ public final class Message {
         self.teamName = teamName
         self.title = title
         self.uploadId = audioFile.url.lastPathComponent.replacingOccurrences(of: ".caf", with: "")
-        // TODO: Put artwork property into the static metadata
-        self.staticMetadata = NowPlayableStaticMetadata(assetURL: self.audioFile.url, mediaType: .audio, isLiveStream: false, title: title, artist: authorName, artwork: nil, albumArtist: authorName, albumTitle: teamName)
+        self.staticMetadata = NowPlayableStaticMetadata(assetURL: self.audioFile!.url, mediaType: .audio, isLiveStream: false, title: title, artist: authorName, artwork: nil, albumArtist: authorName, albumTitle: teamName)
+        self.spokenLanguage = author?.locale?.identifier ?? "en-US"
+    }
+    public init(url: URL, author: Peer?, date: String="", feedId: String="", teamName: String="", title: String="") {
+        self.avAsset = AVAsset(url: url)
+        self.author = author
+        self.authorName = author?.name ?? ""
+        self.date = ISO8601DateFormatter().date(from: date) ?? Date()
+        self.duration = 0
+        self.feedId = feedId
+        self.teamName = teamName
+        self.title = title
+        self.uploadId = url.lastPathComponent.replacingOccurrences(of: ".caf", with: "")
+        self.staticMetadata = NowPlayableStaticMetadata(assetURL: url, mediaType: .audio, isLiveStream: false, title: title, artist: authorName, artwork: nil, albumArtist: authorName, albumTitle: teamName)
         self.spokenLanguage = author?.locale?.identifier ?? "en-US"
     }
     /// Attach the `Transcript` belonging to this message
@@ -77,17 +99,6 @@ public final class Message {
     /// Set this when we know that a new user has listened to the message
     public func setUsersListened(accountIds: [String]) {
         usersListened.append(contentsOf: accountIds)
-    }
-    public func getDefaultMediaSelection() async {
-        let test1 = try! await self.avAsset?.load(.availableMediaCharacteristicsWithMediaSelectionOptions)
-        Log(test1)
-
-        self.avAsset?.loadMediaSelectionGroup(for: .audible, completionHandler: {avmsg, err in
-            if err != nil {
-                Log(err)
-            }
-            Log(avmsg)
-        })
     }
     func getAssetTracks() async throws {
         if self.avAsset != nil {
