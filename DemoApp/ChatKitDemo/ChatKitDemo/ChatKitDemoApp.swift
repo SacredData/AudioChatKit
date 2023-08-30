@@ -21,7 +21,7 @@ struct ChatKitDemoApp: App {
   var preferredLocalization: String = ""
   
     init() {
-      Log(configurator.sessionPreferencesAreValid)
+        Log(configurator.sessionPreferencesAreValid)
         preferredLocalization = configurator.preferredLocalization ?? "blah"
         Log(preferredLocalization)
         
@@ -45,7 +45,9 @@ struct ChatKitDemoApp: App {
         WindowGroup {
           ContentView(audioConfigHelper: self.$configurator,
                       isPlaying: self.$isPlaying,
-                      text: .constant("Hi Tyler")) // .constant() allows for init of pass by reference for a staticly defined value
+                      text: .constant(configurator.sessionPreferencesAreValid! ?
+                                      "We good!" :
+                                     "Nahhhhh")) // .constant() allows for init of pass by reference for a staticly defined value
                                                    // note: values set this way can not be modified
         }
     }
