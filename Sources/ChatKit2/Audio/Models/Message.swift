@@ -50,6 +50,7 @@ public final class Message {
     var staticMetadata: NowPlayableStaticMetadata
     var dynamicMetadata: NowPlayableDynamicMetadata?
 
+    /// Initializer for a message already downloaded to local device storage
     public init(audioFile: AVAudioFile, author: Peer?, date: String="", feedId: String="", teamName: String="", title: String="") {
         self.audioFile = audioFile
         self.avAsset = AVAsset(url: audioFile.url)
@@ -64,6 +65,8 @@ public final class Message {
         self.staticMetadata = NowPlayableStaticMetadata(assetURL: self.audioFile!.url, mediaType: .audio, isLiveStream: false, title: title, artist: authorName, artwork: nil, albumArtist: authorName, albumTitle: teamName)
         self.spokenLanguage = author?.locale?.identifier ?? "en-US"
     }
+    
+    /// Initializer for a message from a remote URL, needing to be downloaded and analyzed
     public init(url: URL, author: Peer?, date: String="", feedId: String="", teamName: String="", title: String="") {
         self.avAsset = AVAsset(url: url)
         self.author = author
