@@ -331,24 +331,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
 
         Log(remoteCommands)
     }
-    
-    private func bufferFromFloats(floats: [Float]) throws {
-        var f: [Float] = []
-        f.append(contentsOf: floats)
-
-        f.withUnsafeMutableBufferPointer { bytes in
-            let ab = AudioBuffer(
-                mNumberChannels: 1,
-                mDataByteSize: UInt32(bytes.count * MemoryLayout<Float>.size),
-                mData: bytes.baseAddress)
-            var bl = AudioBufferList(mNumberBuffers: 1, mBuffers: ab)
-            let ob = AVAudioPCMBuffer(pcmFormat: player.outputFormat, bufferListNoCopy: &bl)!
-            Log(ob.frameLength)
-            Log(ob.floatChannelData)
-            let pk = audioCalc.getPeak(audioBuffer: ob)
-            Log(pk)
-        }
-    }
 }
 
 /// Enables TimeInterval value to be clamped from 0 ... duration of message
