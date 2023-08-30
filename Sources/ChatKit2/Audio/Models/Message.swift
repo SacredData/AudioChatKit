@@ -26,7 +26,7 @@ public final class Message {
     public var author: Peer?
     public let authorName: String?
     public let date: Date
-    public let duration: TimeInterval
+    public var duration: TimeInterval
     public let feedId: String
     public let teamName: String
     public let title: String
@@ -93,6 +93,8 @@ public final class Message {
     func getAssetTracks() async throws {
         if self.avAsset != nil {
             self.tracks = try await (self.avAsset?.loadTracks(withMediaType: .audio))!
+            let trackDur = try await self.avAsset!.load(.duration)
+            self.duration = TimeInterval(trackDur.seconds)
         }
     }
     func newPlaybackEvent(events: [PlaybackEvents]) {
