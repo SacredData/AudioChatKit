@@ -137,8 +137,9 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     
     /// Immediately change player's loaded `Message` and play it
     public func load(msg: Message) throws {
-        let shouldBuffer = msg.audioFile.duration > 30
-        try player.load(file: msg.audioFile, buffered: shouldBuffer)
+        guard let audioFile = msg.audioFile else { return }
+        let shouldBuffer = audioFile.duration > 30
+        try player.load(file: audioFile, buffered: shouldBuffer)
         if player.isBuffered || player.file == msg.audioFile {
             playbackState = PlaybackState.isReady(player.file)
             startPlaybackAudioEngine()
