@@ -12,6 +12,7 @@ import SwiftUI
 
 public class AudioConfigHelper: ObservableObject {
     static var shared: AudioConfigHelper = AudioConfigHelper()
+    public let downloadMan: MessageDownloader = .shared
     public var sessionPreferencesAreValid: Bool?
     public var preferredLocalization: String?
     
@@ -84,5 +85,8 @@ public class AudioConfigHelper: ObservableObject {
         let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
         sessionPreferencesAreValid = validateAudioSessionPreferences(audioSession: audioSession)
+        Task {
+            try await downloadMan.download(url: URL(string:"https://s3.amazonaws.com/sonicmultiplicities.audio/feed/SMOLD_017.mp3")!)
+        }
     }
 }
