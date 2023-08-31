@@ -29,8 +29,8 @@ struct ContentView: View {
           
             Text(audioConfigHelper.recordingFormatIsValid! ? "recording formatIsValid" : "recording format is not valid")
             
-            Text(audioConductor.playerMan.currentTimeString!)
-          
+            Text(audioConductor.playerMan.currentTimeString)
+
           // Try clicking on the play button
           Button(action: {
             self.isPlaying.toggle()
