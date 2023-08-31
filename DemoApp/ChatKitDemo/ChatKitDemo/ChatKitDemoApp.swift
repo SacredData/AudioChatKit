@@ -23,11 +23,13 @@ struct ChatKitDemoApp: App {
         Log(conductor)
         Log(conductor.engine)
         Log(conductor.playerMan.player)
+        Log(conductor.recordMan)
     }
   
     var body: some Scene {
         WindowGroup {
           ContentView(audioConfigHelper: self.$configurator,
+                      audioConductor: self.$conductor,
                       isPlaying: self.$isPlaying,
                       text: .constant(configurator.sessionPreferencesAreValid! ?
                                       "We good!" :

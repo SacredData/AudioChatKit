@@ -11,6 +11,7 @@ import SwiftUI
 struct ContentView: View {
   // @Binding means value passed by reference
   @Binding var audioConfigHelper: AudioConfigHelper
+  @Binding var audioConductor: AudioConductor
   @Binding var isPlaying: Bool
   @Binding var text: String
 
@@ -27,6 +28,8 @@ struct ContentView: View {
           Text(audioConfigHelper.playbackFormatIsValid! ? "playback formatIsValid" : "playback format is not valid")
           
             Text(audioConfigHelper.recordingFormatIsValid! ? "recording formatIsValid" : "recording format is not valid")
+            
+            Text(audioConductor.playerMan.currentTimeString!)
           
           // Try clicking on the play button
           Button(action: {
@@ -50,11 +53,13 @@ struct ContentView_Previews: PreviewProvider {
   struct PreviewInternalView: View {
     // @State is short hand for wiring up the ObservableObject and that these values persist when subviews are instantiated
     @State var audioConfigHelper: AudioConfigHelper = .init()
+      @State var audioConductor: AudioConductor = .shared
     @State var text: String = "Hi Tyler"
     @State var isPlaying: Bool = false
 
     var body: some View {
       ContentView(audioConfigHelper: $audioConfigHelper, // '$' is the passing by reference
+                  audioConductor: $audioConductor,
                   isPlaying: $isPlaying,
                   text: $text)
       .previewLayout(.sizeThatFits)
