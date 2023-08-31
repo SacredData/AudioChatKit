@@ -31,7 +31,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     }
     @Published public var currentTimeString: String = TimeHelper().formatDuration(duration: 0.0)
     var currentFile: [String: AVAudioFile]?
-    @Published var nowPlayableMessage: Message?
+    @Published public var nowPlayableMessage: Message?
     var currentStatus: NodeStatus.Playback? {
         get {
             return player.status
