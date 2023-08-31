@@ -275,11 +275,11 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     private func setupRemoteCommands() {
         NowPlayableCommand.pause.remoteCommand.addTarget { event in
             if !self.nowPlayable {
-                Log("remote pause command failed: no nowplayable item")
+                Log("⏸️ remote pause command failed: no nowplayable item")
                 return .noActionableNowPlayingItem
             }
             if self.player.status == NodeStatus.Playback.paused {
-                Log("remote pause command failed: already paused")
+                Log("⏸️ remote pause command failed: already paused")
                 return .commandFailed
             }
             self.pause()
@@ -289,11 +289,11 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         
         NowPlayableCommand.play.remoteCommand.addTarget { event in
             if !self.nowPlayable {
-                Log("remote play command failed: no nowplayable item")
+                Log("▶️ remote play command failed: no nowplayable item")
                 return .noActionableNowPlayingItem
             }
             if self.player.status == NodeStatus.Playback.playing {
-                Log("remote play command failed: already playing")
+                Log("▶️ remote play command failed: already playing")
                 return .commandFailed
             }
             self.playMessage()
@@ -303,11 +303,11 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         
         NowPlayableCommand.stop.remoteCommand.addTarget { event in
             if !self.nowPlayable {
-                Log("remote stop command failed: no nowplayable item")
+                Log("⏹️ remote stop command failed: no nowplayable item")
                 return .noActionableNowPlayingItem
             }
             if self.player.status == NodeStatus.Playback.stopped {
-                Log("remote stop command failed: already stopped")
+                Log("⏹️ remote stop command failed: already stopped")
                 return .commandFailed
             }
             self.player.stop()
@@ -321,11 +321,11 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         
         NowPlayableCommand.changePlaybackPosition.remoteCommand.addTarget { event in
             if !self.nowPlayable {
-                Log("remote seek command failed: no nowplayable item")
+                Log("⏩ remote seek command failed: no nowplayable item")
                 return .noActionableNowPlayingItem
             }
             if event.timestamp > self.player.duration || event.timestamp < 0.0 {
-                Log("remote seek command failed: invalid seek time provided")
+                Log("⏩ remote seek command failed: invalid seek time provided")
                 return .commandFailed
             }
             self.seek(to: event.timestamp)
