@@ -48,6 +48,7 @@ public class MessageDownloader {
         let fmt = newMsgData[2]
 
         let downloadTask = urlSession.downloadTask(with: url, completionHandler: {tmpPath,_,_ in
+            // TODO: Finish this process by moving to user's Documents
             Log("WE FINISHED DOWNLOADING")
             Log(tmpPath!)
         })
