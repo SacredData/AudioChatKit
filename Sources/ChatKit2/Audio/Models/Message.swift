@@ -61,7 +61,7 @@ public final class Message {
         self.feedId = feedId
         self.teamName = teamName
         self.title = title
-        self.uploadId = audioFile.url.lastPathComponent.replacingOccurrences(of: ".caf", with: "")
+        self.uploadId = audioFile.url.deletingPathExtension().lastPathComponent
         self.staticMetadata = NowPlayableStaticMetadata(assetURL: self.audioFile!.url, mediaType: .audio, isLiveStream: false, title: title, artist: authorName, artwork: nil, albumArtist: authorName, albumTitle: teamName)
         self.spokenLanguage = author?.locale?.identifier ?? "en-US"
     }
@@ -76,7 +76,7 @@ public final class Message {
         self.feedId = feedId
         self.teamName = teamName
         self.title = title
-        self.uploadId = url.lastPathComponent.replacingOccurrences(of: ".caf", with: "")
+        self.uploadId = url.deletingPathExtension().lastPathComponent
         self.staticMetadata = NowPlayableStaticMetadata(assetURL: url, mediaType: .audio, isLiveStream: false, title: title, artist: authorName, artwork: nil, albumArtist: authorName, albumTitle: teamName)
         self.spokenLanguage = author?.locale?.identifier ?? "en-US"
     }
