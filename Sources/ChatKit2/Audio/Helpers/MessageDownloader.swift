@@ -9,6 +9,10 @@ import AudioKit
 import AVFoundation
 import Foundation
 
+/// Class for managing the creation of `AVAsset` and `Message` from new remote
+/// audio message URLs. Provides storage management, file introspection, and track
+/// extraction for the remote audio message. By default, implements `.important`
+/// eviction priority for downloaded messages.
 public class MessageDownloader {
     public static var shared: MessageDownloader = MessageDownloader()
     let storageManager: AVAssetDownloadStorageManager = AVAssetDownloadStorageManager.shared()
