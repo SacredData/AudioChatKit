@@ -13,45 +13,42 @@ public class MessageDownloader {
     public static var shared: MessageDownloader = MessageDownloader()
     let storageManager: AVAssetDownloadStorageManager = AVAssetDownloadStorageManager.shared()
     let evictionPriority: AVAssetDownloadedAssetEvictionPriority = .important
-    
+    lazy var urlSession: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.isDiscretionary = true
+        config.sessionSendsLaunchEvents = true
+        config.waitsForConnectivity = true
+        config.shouldUseExtendedBackgroundIdleMode = true
+        return URLSession(configuration: config, delegate: nil, delegateQueue: nil)
+    }()
+
     public init() {
         print("Message downloaded init'd")
     }
     
-    public func newRemoteMessage(url: URL) async throws {
+    public func newRemoteMessage(url: URL) async throws -> [Any]{
         let msg = Message(url: url, author: nil)
-        guard let avAsset = msg.avAsset else { return }
+        guard let avAsset = msg.avAsset else { return [] }
         Log(avAsset)
         let chars = try await assetCharacteristics(asset: avAsset)
         try await msg.getAssetTracks()
-        guard let track = msg.tracks!.first else { return }
+        guard let track = msg.tracks!.first else { return [] }
         Log(track)
         let fmt = try await assetTrackCharacteristics(track: track)
         Log(fmt)
+        return [msg, chars, fmt]
     }
     
     // TODO: WIP
     public func download(url: URL) async throws {
-        lazy var urlSession: URLSession = {
-            let config = URLSessionConfiguration.default
-            config.isDiscretionary = true
-            config.sessionSendsLaunchEvents = true
-            config.waitsForConnectivity = true
-            config.shouldUseExtendedBackgroundIdleMode = true
-            return URLSession(configuration: config, delegate: nil, delegateQueue: nil)
-        }()
-        // Create AVURLAsset from the URL first and get its properties
-        let assetURL = AVAsset(url: url)
-        let assetCharacteristics = try await assetCharacteristics(asset: assetURL as! AVURLAsset)
-        Log(assetCharacteristics)
+        let newMsgData = try await newRemoteMessage(url: url)
+        let msg = newMsgData[0]
+        let chars = newMsgData[1]
+        let fmt = newMsgData[2]
 
-        // Get the audio track from the container and get its codec properties
-        let assetTrack = try await assetURL.loadTracks(withMediaType: .audio)
-        let trackCharacteristics = try await assetTrackCharacteristics(track: assetTrack.first!)
-        Log(trackCharacteristics)
-        
-        let downloadTask = urlSession.downloadTask(with: url, completionHandler: {_,_,_ in
+        let downloadTask = urlSession.downloadTask(with: url, completionHandler: {tmpPath,_,_ in
             Log("WE FINISHED DOWNLOADING")
+            Log(tmpPath!)
         })
         downloadTask.earliestBeginDate = Date()
         downloadTask.resume()
