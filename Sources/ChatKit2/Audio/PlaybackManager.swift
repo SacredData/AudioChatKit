@@ -332,8 +332,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
             return .success
         }
         remoteCommands.append(NowPlayableCommand.changePlaybackPosition)
-
-        Log(remoteCommands)
     }
 }
 
