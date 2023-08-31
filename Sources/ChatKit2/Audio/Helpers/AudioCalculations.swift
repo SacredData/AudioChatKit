@@ -17,7 +17,8 @@ public class AudioCalculations: ObservableObject {
     var dbFloatsUI: [Float] = [10.0, 10.0, 10.0]
     var recDbRMS: Float = .nan
     
-    var pcmOutputBuffer: AVAudioPCMBuffer?
+    var pcmOutputBufferMono: AVAudioPCMBuffer?
+    var pcmOutputBufferStereo: AVAudioPCMBuffer?
 
     /// Every audio callback containing floats, call this function to re-calculate
     /// audio dB RMS and modify the CGFloats used in the UI to provide
@@ -61,7 +62,7 @@ public class AudioCalculations: ObservableObject {
                 mDataByteSize: UInt32(bytes.count * MemoryLayout<Float>.size),
                 mData: bytes.baseAddress)
             var bl = AudioBufferList(mNumberBuffers: 1, mBuffers: ab)
-            self.pcmOutputBuffer = AVAudioPCMBuffer(pcmFormat: AudioFormats.global!, bufferListNoCopy: &bl)!
+            self.pcmOutputBufferStereo = AVAudioPCMBuffer(pcmFormat: AudioFormats.global!, bufferListNoCopy: &bl)!
         }
     }
 
@@ -76,7 +77,7 @@ public class AudioCalculations: ObservableObject {
                 mDataByteSize: UInt32(bytes.count * MemoryLayout<Float>.size),
                 mData: bytes.baseAddress)
             var bl = AudioBufferList(mNumberBuffers: 1, mBuffers: ab)
-            self.pcmOutputBuffer = AVAudioPCMBuffer(pcmFormat: AudioFormats.record!, bufferListNoCopy: &bl)!
+            self.pcmOutputBufferMono = AVAudioPCMBuffer(pcmFormat: AudioFormats.record!, bufferListNoCopy: &bl)!
         }
     }
 }
