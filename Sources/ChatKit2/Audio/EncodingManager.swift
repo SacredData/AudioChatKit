@@ -11,6 +11,7 @@ import Opus
 import SwiftOGG
 
 public class EncodingManager: ObservableObject {
+    public let audioCalcs: AudioCalculations = .shared
     let bitrate: Int = FormatConverterSettings.bitrate
     let sampleRate: Int = FormatConverterSettings.sampleRate
     let channelCount: Int = FormatConverterSettings.channels
@@ -52,6 +53,23 @@ public class EncodingManager: ObservableObject {
         try OGGConverter.convertM4aFileToOpusOGG(src: srcURL, dest: outputURL)
         latestOpus = outputURL
         return outputURL
+    }
+    
+    public func floatsToOpus(floats: [Float]) throws {
+        if opusEncoder == nil {
+            do {
+                try instantiateOpusEncoder()
+            } catch {
+                Log(error)
+                return
+            }
+        }
+        var data = Data(count: 0)
+        audioCalcs.bufferFromFloats(floats: floats)
+        guard let buf = audioCalcs.pcmOutputBufferMono else { return }
+        let encCount = try opusEncoder?.encode(buf, to: &data)
+        Log(encCount, data)
+        try opusEncoder?.reset()
     }
 
     /* TODO: Figure out what is going wrong with the floats operation
