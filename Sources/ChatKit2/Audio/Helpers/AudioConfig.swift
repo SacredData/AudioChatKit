@@ -17,8 +17,8 @@ public class AudioConfigHelper: ObservableObject {
     
     public let recordFormat: AVAudioFormat
     public let playbackFormat: AVAudioFormat
-    public var recordingFormatIsValid: Bool?
     public var playbackFormatIsValid: Bool?
+    public var recordingFormatIsValid: Bool?
 
     public init() {
         recordFormat = AudioFormats.record!
