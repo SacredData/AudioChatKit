@@ -9,7 +9,7 @@ import AudioKit
 import AVFoundation
 import Foundation
 
-public class MessageDownloader: ObservableObject {
+public class MessageDownloader {
     public static var shared: MessageDownloader = MessageDownloader()
     let storageManager: AVAssetDownloadStorageManager = AVAssetDownloadStorageManager.shared()
     let evictionPriority: AVAssetDownloadedAssetEvictionPriority = .important
@@ -32,6 +32,14 @@ public class MessageDownloader: ObservableObject {
     
     // TODO: WIP
     public func download(url: URL) async throws {
+        lazy var urlSession: URLSession = {
+            let config = URLSessionConfiguration.default
+            config.isDiscretionary = true
+            config.sessionSendsLaunchEvents = true
+            config.waitsForConnectivity = true
+            config.shouldUseExtendedBackgroundIdleMode = true
+            return URLSession(configuration: config, delegate: nil, delegateQueue: nil)
+        }()
         // Create AVURLAsset from the URL first and get its properties
         let assetURL = AVAsset(url: url)
         let assetCharacteristics = try await assetCharacteristics(asset: assetURL as! AVURLAsset)
@@ -41,6 +49,12 @@ public class MessageDownloader: ObservableObject {
         let assetTrack = try await assetURL.loadTracks(withMediaType: .audio)
         let trackCharacteristics = try await assetTrackCharacteristics(track: assetTrack.first!)
         Log(trackCharacteristics)
+        
+        let downloadTask = urlSession.downloadTask(with: url, completionHandler: {_,_,_ in
+            Log("WE FINISHED DOWNLOADING")
+        })
+        downloadTask.earliestBeginDate = Date()
+        downloadTask.resume()
     }
 
     /// Retrieve important properties about a remote audio message
