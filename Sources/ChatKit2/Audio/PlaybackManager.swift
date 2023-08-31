@@ -151,6 +151,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
 
     /// Seek the player to the given `TimeInterval` for currently-loaded message
     public func seek(to time: TimeInterval) {
+        let preSeekTime = player.currentTime
         DispatchQueue.global(qos: .userInteractive).async {
             switch self.playbackState {
             case .isScheduling(let aVAudioFile),
@@ -162,6 +163,9 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                 // No matter what the clamped time will never be > audio duration
                 let clampedTime = time.clamped(to: 0 ... aVAudioFile!.duration)
                 self.player.seek(time: clampedTime)
+                    self.nowPlayableMessage?.newPlaybackEvent(events: [
+                        PlaybackEvents.seek(Date(), [preSeekTime, time])
+                    ])
             default:
                 break
             }
