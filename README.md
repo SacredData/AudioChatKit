@@ -45,7 +45,7 @@ will be required to go through code review via GitHub pull request.
 #### Enums
 | Enum           | Source File |
 |----------------|-------------|
-|`AudioFormats` | [`Models/AudioFormatsl.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/AudioFormats.swift)|
+|`AudioFormats` | [`Models/AudioFormats.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/AudioFormats.swift)|
 |`AudioKitSettings` | [`Models/AudioKitSettings.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/AudioKitSettings.swift)|
 |`PlaybackEvents`| [`Models/PlaybackEvents.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/PlaybackEvents.swift)|
 |`PlaybackState` | [`Models/PlaybackState.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/PlaybackState.swift)|
