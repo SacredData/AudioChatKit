@@ -32,14 +32,11 @@ public class MessageDownloader {
     
     public func newRemoteMessage(url: URL) async throws -> [Any]{
         let msg = Message(url: url, author: nil)
-        guard let avAsset = msg.avAsset else { return [] }
-        Log(avAsset)
+        guard let avAsset = msg.avAsset else { return [msg] }
         let chars = try await assetCharacteristics(asset: avAsset)
         try await msg.getAssetTracks()
-        guard let track = msg.tracks!.first else { return [] }
-        Log(track)
+        guard let track = msg.tracks!.first else { return [msg, chars] }
         let fmt = try await assetTrackCharacteristics(track: track)
-        Log(fmt)
         return [msg, chars, fmt]
     }
     
