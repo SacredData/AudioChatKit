@@ -8,28 +8,66 @@
 import AudioKit
 import AVFoundation
 
-public class RecordingManager: ObservableObject {
-    private var audioEngineManager: AudioEngineManager = .shared
+public class RecordingManager: ObservableObject, HasAudioEngine {
+    private var engineMan: AudioEngineManager = .shared
     public var engine: AudioKit.AudioEngine
-    public var recorder: NodeRecorder
-    public var inputNode: AudioEngine.InputNode
-
+    public var inputNode: AudioEngine.InputNode?
+    public var recorder: NodeRecorder?
+    
+    var durationAnchor: Double = 0.0
+    var currentDuration: TimeInterval = 0.0
+    @Published var durationString: String?
+    @Published var hasRecordPermissions: Bool?
+    
     public init() {
+        engine = engineMan.engine
+        inputNode = engine.input
+    }
+    
+    public func createRecorder() {
         do {
-            try audioEngineManager.setupRecorder()
+            if !engine.avEngine.isRunning {
+                try engine.start()
+                Log(engine.avEngine.isRunning)
+            }
+            if let i = inputNode {
+                getPermissions()
+                recorder = try NodeRecorder(node: i, shouldCleanupRecordings: true) { floats, time in
+                    let timeSec = AVAudioTime.seconds(forHostTime: time.hostTime)
+                    Log(timeSec)
+                    if self.durationAnchor == 0.0 {
+                        self.durationAnchor = timeSec
+                    } else {
+                        self.currentDuration = timeSec - self.durationAnchor
+                    }
+                    DispatchQueue.main.async {
+                        self.durationString = TimeHelper().formatDuration(duration: self.currentDuration)
+                        Log(self.durationString)
+                    }
+                }
+                Log(recorder)
+                try recorder!.record()
+            }
         } catch {
             Log(error)
+            return
         }
-        if let e = audioEngineManager.recEngine,
-           let i = audioEngineManager.inputNode,
-           let r = audioEngineManager.recorder {
-            engine = e
-            inputNode = i
-            recorder = r
-        } else {
-            engine = AudioEngine()
-            inputNode = engine.input!
-            recorder = try! NodeRecorder(node: inputNode)
+    }
+    
+    private func getPermissions() {
+        AVAudioSession.sharedInstance().requestRecordPermission { granted in
+            DispatchQueue.main.async {
+                self.hasRecordPermissions = granted
+            }
+            if granted {
+                Log("⏺️🎤 Recording permissions granted")
+                // The user granted access. Present recording interface.
+            } else {
+                Log("❌🎤 Recording permissions denied")
+                // Present message to user indicating that recording
+                // can't be performed until they change their preference
+                // under Settings -> Privacy -> Microphone
+            }
         }
     }
 }
