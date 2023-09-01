@@ -27,7 +27,9 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     @Published var currentProgress: Float?
     var currentTime: TimeInterval? {
         didSet {
-            currentTimeString = TimeHelper().formatDuration(duration: currentTime!)
+            DispatchQueue.main.async {
+                self.currentTimeString = TimeHelper().formatDuration(duration: self.currentTime!)
+            }
         }
     }
     @Published public var currentTimeString: String = TimeHelper().formatDuration(duration: 0.0)
@@ -264,15 +266,32 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                 // Publish new progress float for UI to grab
                 self.currentProgress = Float(self.player.currentPosition)
                 self.currentTime = self.player.currentTime
-                Log(self.currentProgress, self.currentTime)
             }
             if nowPlayableMessage?.transcript != nil {
                 let currentLO = nowPlayableMessage!.transcript?.languageOption
                 let loGroup = MPNowPlayingInfoLanguageOptionGroup.init(languageOptions: [currentLO!], defaultLanguageOption: currentLO, allowEmptySelection: true)
-                
+
                 IOSNowPlayableBehavior().handleNowPlayablePlaybackChange(
                     playing: isPlayingNow,
-                    metadata: NowPlayableDynamicMetadata(rate: player.playerNode.rate, position: Float(player.currentPosition), duration: Float(player.duration), currentLanguageOptions: [currentLO!], availableLanguageOptionGroups: [loGroup]))
+                    metadata: NowPlayableDynamicMetadata(
+                        rate: player.playerNode.rate,
+                        elapsed: player.currentTime,
+                        position: Float(player.currentPosition),
+                        duration: Float(player.duration),
+                        currentLanguageOptions: [currentLO!],
+                        availableLanguageOptionGroups: [loGroup]))
+            } else {
+                let currentLO = MPNowPlayingInfoLanguageOption(type: .audible, languageTag: "en-US", characteristics: nil, displayName: "AMERICAN", identifier: "lol")
+                let loGroup = MPNowPlayingInfoLanguageOptionGroup.init(languageOptions: [MPNowPlayingInfoLanguageOption(type: .audible, languageTag: "en-US", characteristics: nil, displayName: "AMERICAN", identifier: "lol")], defaultLanguageOption: nil, allowEmptySelection: true)
+                IOSNowPlayableBehavior().handleNowPlayablePlaybackChange(
+                    playing: isPlayingNow,
+                    metadata: NowPlayableDynamicMetadata(
+                        rate: player.playerNode.rate,
+                        elapsed: player.currentTime,
+                        position: Float(player.currentPosition),
+                        duration: Float(player.duration),
+                        currentLanguageOptions: [currentLO],
+                        availableLanguageOptionGroups: [loGroup]))
             }
         }
     }
