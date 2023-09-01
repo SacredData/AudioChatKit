@@ -281,8 +281,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                         currentLanguageOptions: [currentLO!],
                         availableLanguageOptionGroups: [loGroup]))
             } else {
-                let currentLO = MPNowPlayingInfoLanguageOption(type: .audible, languageTag: "en-US", characteristics: nil, displayName: "AMERICAN", identifier: "lol")
-                let loGroup = MPNowPlayingInfoLanguageOptionGroup.init(languageOptions: [MPNowPlayingInfoLanguageOption(type: .audible, languageTag: "en-US", characteristics: nil, displayName: "AMERICAN", identifier: "lol")], defaultLanguageOption: nil, allowEmptySelection: true)
                 IOSNowPlayableBehavior().handleNowPlayablePlaybackChange(
                     playing: isPlayingNow,
                     metadata: NowPlayableDynamicMetadata(
@@ -290,8 +288,8 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                         elapsed: player.currentTime,
                         position: Float(player.currentPosition),
                         duration: Float(player.duration),
-                        currentLanguageOptions: [currentLO],
-                        availableLanguageOptionGroups: [loGroup]))
+                        currentLanguageOptions: nil,
+                        availableLanguageOptionGroups: nil))
             }
         }
     }
