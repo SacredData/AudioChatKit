@@ -11,6 +11,7 @@ import MediaPlayer
 public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     private var audioEngineManager: AudioEngineManager = .shared
     public let audioCalc: AudioCalculations = .shared
+    public let downloadMan: MessageDownloader = .shared
     public var engine: AudioKit.AudioEngine
     public var player: AudioKit.AudioPlayer
 
@@ -133,6 +134,10 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         } else {
             try load(msg: msg)
         }
+    }
+    
+    public func newRemoteMessage(url: URL) async throws {
+        
     }
     
     /// Immediately change player's loaded `Message` and play it

@@ -16,25 +16,34 @@ struct ChatKitDemoApp: App {
   @State var isPlaying: Bool = false
   @State var conductor: AudioConductor = .shared
   var preferredLocalization: String = ""
+  var downloadMan: MessageDownloader = .shared
   
     init() {
-        Log(configurator.sessionPreferencesAreValid)
+        conductor.start()
         Log(preferredLocalization)
         Log(conductor)
         Log(conductor.engine)
         Log(conductor.playerMan.player)
-        Log(conductor.recordMan)
+        //Log(conductor.recordMan)
+        doTheDl()
+    }
+    
+    func doTheDl() {
+        Task {
+            try! await downloadMan.download(url: URL(string:"https://s3.amazonaws.com/sonicmultiplicities.audio/feed/SMOLD_017.mp3")!)
+        }
+        let file = try! AVAudioFile(forReading: downloadMan.downloadDir.appendingPathComponent("test.mp3"))
+        let msg = Message(audioFile: file, author: nil)
+        Log("made msg from local file")
+        Log(msg)
+        try! conductor.playerMan.newLocalMessage(msg: msg)
     }
   
     var body: some Scene {
         WindowGroup {
           ContentView(audioConfigHelper: self.$configurator,
                       audioConductor: self.$conductor,
-                      isPlaying: self.$isPlaying,
-                      text: .constant(configurator.sessionPreferencesAreValid! ?
-                                      "We good!" :
-                                     "Nahhhhh")) // .constant() allows for init of pass by reference for a staticly defined value
-                                                   // note: values set this way can not be modified
+                      isPlaying: self.$isPlaying)
         }
     }
 }

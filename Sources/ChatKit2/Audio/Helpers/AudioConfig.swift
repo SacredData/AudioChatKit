@@ -15,7 +15,8 @@ public class AudioConfigHelper: ObservableObject {
     public let downloadMan: MessageDownloader = .shared
     public var sessionPreferencesAreValid: Bool?
     public var preferredLocalization: String?
-    
+
+    public let audioSession: AVAudioSession = AVAudioSession.sharedInstance()
     public let recordFormat: AVAudioFormat
     public let playbackFormat: AVAudioFormat
     public var playbackFormatIsValid: Bool?
@@ -55,8 +56,11 @@ public class AudioConfigHelper: ObservableObject {
     
     public func validateAudioSessionPreferences(audioSession: AVAudioSession) -> Bool {
         let prefersCorrectSampleRate = audioSession.preferredSampleRate == AudioFormats.global?.sampleRate
+        Log(prefersCorrectSampleRate)
         let prefersCorrectInputChannels = audioSession.preferredInputNumberOfChannels == AudioFormats.record!.channelCount
+        Log(prefersCorrectInputChannels, audioSession.preferredInputNumberOfChannels)
         let prefersCorrectOutputChannels = audioSession.preferredOutputNumberOfChannels == AudioFormats.global!.channelCount
+        Log(prefersCorrectOutputChannels, audioSession.preferredOutputNumberOfChannels)
         return [prefersCorrectSampleRate, prefersCorrectInputChannels, prefersCorrectOutputChannels].allSatisfy({$0 == true})
     }
     
@@ -77,16 +81,12 @@ public class AudioConfigHelper: ObservableObject {
         AudioKit.Settings.enableLogging = true
         AudioKit.Settings.bufferLength = .short
         AudioKit.Settings.fixTruncatedRecordings = true
+        AudioKit.Settings.disableAVAudioSessionCategoryManagement = false
         AudioKit.Settings.audioFormat = AVAudioFormat(settings: formatSettings)!
     }
     
     /// Default config for audio session will be long-form spoken audio playback
     public func setupDefaultSession() throws {
-        let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.playback, mode: .spokenAudio, policy: .longFormAudio)
-        sessionPreferencesAreValid = validateAudioSessionPreferences(audioSession: audioSession)
-        Task {
-            try await downloadMan.download(url: URL(string:"https://s3.amazonaws.com/sonicmultiplicities.audio/feed/SMOLD_017.mp3")!)
-        }
     }
 }

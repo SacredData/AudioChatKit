@@ -15,6 +15,8 @@ import Foundation
 /// eviction priority for downloaded messages.
 public class MessageDownloader {
     public static var shared: MessageDownloader = MessageDownloader()
+    public let downloadDir: URL = FileManager.default.urls(for: .documentDirectory,
+                                                           in: .userDomainMask).first!
     let storageManager: AVAssetDownloadStorageManager = AVAssetDownloadStorageManager.shared()
     let evictionPriority: AVAssetDownloadedAssetEvictionPriority = .important
     lazy var urlSession: URLSession = {
@@ -46,11 +48,23 @@ public class MessageDownloader {
         let msg = newMsgData[0]
         let chars = newMsgData[1]
         let fmt = newMsgData[2]
+        
+        let fileDir = FileManager.default.urls(for: .documentDirectory,
+                                                in: .userDomainMask).first
 
         let downloadTask = urlSession.downloadTask(with: url, completionHandler: {tmpPath,_,_ in
             // TODO: Finish this process by moving to user's Documents
             Log("WE FINISHED DOWNLOADING")
             Log(tmpPath!)
+            let f = FileManager()
+            do {
+                try f.moveItem(at: tmpPath!, to: (fileDir?.appendingPathComponent("test.mp3"))!)
+                Log("ITS HERE")
+                Log(fileDir?.appendingPathComponent("test.mp3"))
+            } catch {
+                Log(error)
+                Log(fileDir?.appendingPathComponent("test.mp3"))
+            }
         })
         downloadTask.earliestBeginDate = Date()
         downloadTask.resume()

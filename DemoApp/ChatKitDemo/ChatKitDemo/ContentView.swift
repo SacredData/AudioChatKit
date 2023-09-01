@@ -13,13 +13,13 @@ struct ContentView: View {
   @Binding var audioConfigHelper: AudioConfigHelper
   @Binding var audioConductor: AudioConductor
   @Binding var isPlaying: Bool
-  @Binding var text: String
+  //@Binding var text: String
 
     var body: some View {
         VStack {
             Image(systemName: "globe")
                 .imageScale(.large)
-            Text(text)
+            //Text(text)
             // TODO: Add audio config information
           
           Text(audioConfigHelper.preferredLocalization ?? "none") // ?? used to specify default value in case preceeding is nil (Swift's version of null)
@@ -60,8 +60,7 @@ struct ContentView_Previews: PreviewProvider {
     var body: some View {
       ContentView(audioConfigHelper: $audioConfigHelper, // '$' is the passing by reference
                   audioConductor: $audioConductor,
-                  isPlaying: $isPlaying,
-                  text: $text)
+                  isPlaying: $isPlaying)
       .previewLayout(.sizeThatFits)
       .colorScheme(.dark)
     }
