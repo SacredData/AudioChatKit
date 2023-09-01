@@ -23,7 +23,6 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     var tapStartTime: AVAudioTime?
     var playackTime: TimeInterval?
 
-    /// Use this published value to update UI progress bar
     @Published var currentProgress: Float?
     var currentTime: TimeInterval? {
         didSet {
@@ -182,7 +181,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     /// Creates an AudioKit `RawDataTap` responsible for incrementing playback
     /// progress. Updates `NowPlayingInfo` with current playback state and metadata.
     public func setupOutputTap(inputNode: Node) -> RawDataTap {
-        return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInitiated), handler: { floats in
+        return RawDataTap(inputNode, bufferSize: 4096, callbackQueue: DispatchQueue.init(label:"outputtap", qos: .userInitiated), handler: { _ in
             if self.tapStartTime != nil {
                 self.updateNowPlayingProgress()
                 //self.audioCalc.bufferFromFloatsStereo(floats: floats)
@@ -243,7 +242,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
     }
     
     private func getUploadIdFromFile(file: AVAudioFile) -> String {
-        return file.url.lastPathComponent.replacingOccurrences(of: ".caf", with: "")
+        return file.url.deletingPathExtension().lastPathComponent
     }
 
     private func changeNowPlayingItem(msg: Message) {
@@ -259,7 +258,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
         case .isPlaying:
             isPlayingNow = true
         default:
-            break
+            return
         }
         if isPlayingNow {
             DispatchQueue.main.async {
@@ -268,6 +267,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                 self.currentTime = self.player.currentTime
             }
             if nowPlayableMessage?.transcript != nil {
+                // If we have language options available
                 let currentLO = nowPlayableMessage!.transcript?.languageOption
                 let loGroup = MPNowPlayingInfoLanguageOptionGroup.init(languageOptions: [currentLO!], defaultLanguageOption: currentLO, allowEmptySelection: true)
 
@@ -281,6 +281,7 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                         currentLanguageOptions: [currentLO!],
                         availableLanguageOptionGroups: [loGroup]))
             } else {
+                // If no language options set them to nil
                 IOSNowPlayableBehavior().handleNowPlayablePlaybackChange(
                     playing: isPlayingNow,
                     metadata: NowPlayableDynamicMetadata(
@@ -346,11 +347,13 @@ public class PlaybackManager: ObservableObject, ProcessesPlayerInput {
                 Log("⏩ remote seek command failed: no nowplayable item")
                 return .noActionableNowPlayingItem
             }
-            if event.timestamp > self.player.duration || event.timestamp < 0.0 {
+            let changePlaybackPositionCommandEvent = event as? MPChangePlaybackPositionCommandEvent
+            let positionTime = changePlaybackPositionCommandEvent!.positionTime
+            if positionTime > self.player.duration || positionTime < 0.0 {
                 Log("⏩ remote seek command failed: invalid seek time provided")
                 return .commandFailed
             }
-            self.seek(to: event.timestamp)
+            self.seek(to: positionTime)
             return .success
         }
         remoteCommands.append(NowPlayableCommand.changePlaybackPosition)
