@@ -12,17 +12,6 @@ struct ContentView: View {
   // @Binding means value passed by reference
   @Binding var audioConfigHelper: AudioConfigHelper
   @Binding var audioConductor: AudioConductor
-    @Binding var isPlaying: Bool {
-        didSet {
-            if isPlaying {
-                try! audioConductor.playerMan.newLocalMessage(msg: msg)
-            } else {
-                audioConductor.playerMan.pause()
-            }
-        }
-    }
-  @Binding var msg: Message
-  //@Binding var text: String
 
     var body: some View {
         VStack {
@@ -38,19 +27,14 @@ struct ContentView: View {
           
             Text(audioConfigHelper.recordingFormatIsValid! ? "recording formatIsValid" : "recording format is not valid")
             
-            Text(audioConductor.playerMan.currentTimeString)
-            
-            Text(msg.date.description)
-            Text(msg.teamName)
-            Text(msg.authorName ?? "Author")
 
           // Try clicking on the play button
-          Button(action: {
-            self.isPlaying.toggle()
-          }) {
-            Image(systemName: self.isPlaying ? "pause.fill" : "play.fill")
-          }
-          .foregroundColor(.blue)
+//          Button(action: {
+//            self.isPlaying.toggle()
+//          }) {
+//            Image(systemName: self.isPlaying ? "pause.fill" : "play.fill")
+//          }
+          //.foregroundColor(.blue)
         }
         .foregroundColor(.pink)
         .padding()
