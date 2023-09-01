@@ -76,12 +76,12 @@ public class AudioConfigHelper: ObservableObject {
         formatSettings[AVSampleRateKey] = 48000
         formatSettings[AVLinearPCMBitDepthKey] = 32
         formatSettings[AVLinearPCMIsFloatKey] = true
-        formatSettings[AVNumberOfChannelsKey] = 1
+        formatSettings[AVNumberOfChannelsKey] = 2
         
         AudioKit.Settings.enableLogging = true
         AudioKit.Settings.bufferLength = .short
         AudioKit.Settings.fixTruncatedRecordings = true
-        AudioKit.Settings.disableAVAudioSessionCategoryManagement = false
+        //AudioKit.Settings.disableAVAudioSessionCategoryManagement = false
         AudioKit.Settings.audioFormat = AVAudioFormat(settings: formatSettings)!
     }
     

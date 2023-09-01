@@ -52,22 +52,25 @@ public class AudioEngineManager: ObservableObject, HasAudioEngine {
 
     private func instantiateInput(eng: AudioEngine) throws -> AudioEngine.InputNode {
         Log("Requesting default audio engine input")
-        IOSNowPlayableBehavior().handleNowPlayableSessionEnd()
-        try session.setCategory(.playAndRecord, mode: .default)
+        //IOSNowPlayableBehavior().handleNowPlayableSessionEnd()
+        //try session.setCategory(.record, mode: .default)
         let hasValidPrefs = AudioConfigHelper().validateAudioSessionPreferences(audioSession: session)
         Log(hasValidPrefs)
         guard let input = eng.input else { fatalError("No input found") }
         Log("Got the InputNode")
         Log(input)
         Log(eng.inputDevice)
+        Log("Is the format for recording valid?")
+        Log(AudioConfigHelper().validateAudioFormatForRecording(audioFormat: input.outputFormat))
         return input
     }
 
     public func setupRecorder() throws {
         recEngine = AudioEngine()
+        if engine.avEngine.isRunning {
+            engine.stop()
+        }
         let input = try instantiateInput(eng: recEngine!)
-        let recMixer = Mixer([input])
-        inputNode = input
         recorder = try NodeRecorder(node: input, shouldCleanupRecordings: true) { floats, time in
             Log(floats, time)
             AudioCalculations().updateDbArray(floats)

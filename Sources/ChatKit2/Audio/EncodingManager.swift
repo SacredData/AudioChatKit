@@ -65,8 +65,8 @@ public class EncodingManager: ObservableObject {
             }
         }
         var data = Data(count: 0)
-        audioCalcs.bufferFromFloats(floats: floats)
-        guard let buf = audioCalcs.pcmOutputBufferMono else { return }
+        audioCalcs.bufferFromFloatsStereo(floats: floats)
+        guard let buf = audioCalcs.pcmOutputBufferStereo else { return }
         let encCount = try opusEncoder?.encode(buf, to: &data)
         Log(encCount, data)
         try opusEncoder?.reset()

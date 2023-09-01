@@ -12,6 +12,14 @@ struct ContentView: View {
   // @Binding means value passed by reference
   @Binding var audioConfigHelper: AudioConfigHelper
   @Binding var audioConductor: AudioConductor
+    @Binding var isPlaying: Bool {
+        didSet {
+            if isPlaying {
+                try! audioConductor.recordMan.start()
+                try! audioConductor.recordMan.createRecorder()
+            }
+        }
+    }
 
     var body: some View {
         VStack {
@@ -29,12 +37,12 @@ struct ContentView: View {
             
 
           // Try clicking on the play button
-//          Button(action: {
-//            self.isPlaying.toggle()
-//          }) {
-//            Image(systemName: self.isPlaying ? "pause.fill" : "play.fill")
-//          }
-          //.foregroundColor(.blue)
+          Button(action: {
+            self.isPlaying.toggle()
+          }) {
+            Image(systemName: self.isPlaying ? "pause.fill" : "play.fill")
+          }
+          .foregroundColor(.blue)
         }
         .foregroundColor(.pink)
         .padding()

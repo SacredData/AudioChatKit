@@ -17,7 +17,10 @@ let package = Package(
     dependencies: [
         .package(
            url: "https://github.com/AudioKit/AudioKit.git",
-           .upToNextMajor(from: "5.0.0")),
+           .upToNextMajor(from: "5.6.0")),
+        .package(
+            url: "https://github.com/AudioKit/AudioKitEX.git",
+            .upToNextMajor(from: "5.6.0")),
         .package(
             url: "https://github.com/alta/swift-opus.git",
             .upToNextMajor(from: "0.0.2")),
@@ -31,6 +34,7 @@ let package = Package(
         .target(
             name: "ChatKit2",
             dependencies: ["AudioKit", // for almost all the audio stuff
+                           "AudioKitEX",
                            .product(name: "Opus", package: "swift-opus"), // for pcm -> opus packet encoding
                            .product(name: "SwiftOGG", package: "swift-ogg") // for conversion from m4a -> opus
             ]),

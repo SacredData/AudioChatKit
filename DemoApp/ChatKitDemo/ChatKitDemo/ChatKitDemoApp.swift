@@ -14,6 +14,7 @@ import SwiftUI
 struct ChatKitDemoApp: App {
   @State var configurator: AudioConfigHelper = .init()
   @State var conductor: AudioConductor = .shared
+  @State var isPlaying: Bool = false
   var preferredLocalization: String = ""
   var downloadMan: MessageDownloader = .shared
 
@@ -28,7 +29,8 @@ struct ChatKitDemoApp: App {
     var body: some Scene {
         WindowGroup {
           ContentView(audioConfigHelper: self.$configurator,
-                      audioConductor: self.$conductor)
+                      audioConductor: self.$conductor,
+                      isPlaying: self.$isPlaying)
         }
     }
 }

@@ -6,11 +6,14 @@
 //
 
 import AudioKit
+import AudioKitEX
 import AVFoundation
 
 public class RecordingManager: ObservableObject, HasAudioEngine {
-    private var engineMan: AudioEngineManager = .shared
+    //private var engineMan: AudioEngineManager = .shared
     private var audioConfig: AudioConfigHelper = .shared
+    //private var audioCalcs: AudioCalculations = .shared
+    private var encodingMan: EncodingManager = EncodingManager()
     public var engine: AudioKit.AudioEngine
     public var inputNode: AudioEngine.InputNode?
     public var recorder: NodeRecorder?
@@ -18,25 +21,37 @@ public class RecordingManager: ObservableObject, HasAudioEngine {
     
     var durationAnchor: Double = 0.0
     var currentDuration: TimeInterval = 0.0
-    @Published var durationString: String?
+    @Published public var durationString: String?
     @Published var hasRecordPermissions: Bool?
     
     public init() {
-        engine = engineMan.engine
-        //inputNode = engine.input
+        Log(AudioKit.Settings.audioFormat)
+        Log(AudioKit.Settings.defaultAudioFormat)
+        Log(AudioKit.Settings.channelCount)
+        Log(AudioKit.Settings.sampleRate)
+        Log(AudioKit.Settings.recordingBufferLength)
+
+        engine = AudioEngine()
     }
     
     public func createRecorder() {
         do {
-            if !engine.avEngine.isRunning {
-                try engine.start()
-                Log(engine.avEngine.isRunning)
-            }
+            try audioConfig.setRecordSession()
+            let inputPorts = getInputPorts()
+            Log("Session reported available inputs")
+            Log(inputPorts)
             if let i = engine.input {
+                inputNode = i
                 getPermissions()
+                let silencer = Fader(inputNode!, gain: 0)
+                let mixer = Mixer([silencer])
+                engine.output = mixer
+                if !engine.avEngine.isRunning {
+                    try engine.start()
+                    Log(engine.avEngine.isRunning)
+                }
                 recorder = try NodeRecorder(node: i, shouldCleanupRecordings: true) { floats, time in
                     let timeSec = AVAudioTime.seconds(forHostTime: time.hostTime)
-                    Log(timeSec)
                     if self.durationAnchor == 0.0 {
                         self.durationAnchor = timeSec
                     } else {
@@ -44,11 +59,16 @@ public class RecordingManager: ObservableObject, HasAudioEngine {
                     }
                     DispatchQueue.main.async {
                         self.durationString = TimeHelper().formatDuration(duration: self.currentDuration)
-                        Log(self.durationString)
                     }
+                    // TODO: Route buffer output to opus encoder!
+                    /*
+                    DispatchQueue.global(qos: .utility).async {
+                        self.audioCalcs.bufferFromFloats(floats: floats)
+                        Log(self.audioCalcs.pcmOutputBufferMono)
+                    }
+                    */
                 }
                 Log(recorder)
-                try audioConfig.setRecordSession()
                 try recorder!.record()
             }
         } catch {
@@ -72,5 +92,14 @@ public class RecordingManager: ObservableObject, HasAudioEngine {
                 // under Settings -> Privacy -> Microphone
             }
         }
+    }
+    
+    private func getInputPorts() -> [Any] {
+        var avail: [AVAudioSessionPortDescription] = []
+        guard let availableInputs = audioSession.availableInputs else { return [] }
+        if availableInputs.count > 0 {
+            avail.append(contentsOf: availableInputs)
+        }
+        return avail
     }
 }
