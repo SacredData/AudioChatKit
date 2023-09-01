@@ -10,9 +10,11 @@ import AVFoundation
 
 public class RecordingManager: ObservableObject, HasAudioEngine {
     private var engineMan: AudioEngineManager = .shared
+    private var audioConfig: AudioConfigHelper = .shared
     public var engine: AudioKit.AudioEngine
     public var inputNode: AudioEngine.InputNode?
     public var recorder: NodeRecorder?
+    public var audioSession: AVAudioSession = AVAudioSession.sharedInstance()
     
     var durationAnchor: Double = 0.0
     var currentDuration: TimeInterval = 0.0
@@ -21,7 +23,7 @@ public class RecordingManager: ObservableObject, HasAudioEngine {
     
     public init() {
         engine = engineMan.engine
-        inputNode = engine.input
+        //inputNode = engine.input
     }
     
     public func createRecorder() {
@@ -30,7 +32,7 @@ public class RecordingManager: ObservableObject, HasAudioEngine {
                 try engine.start()
                 Log(engine.avEngine.isRunning)
             }
-            if let i = inputNode {
+            if let i = engine.input {
                 getPermissions()
                 recorder = try NodeRecorder(node: i, shouldCleanupRecordings: true) { floats, time in
                     let timeSec = AVAudioTime.seconds(forHostTime: time.hostTime)
@@ -46,6 +48,7 @@ public class RecordingManager: ObservableObject, HasAudioEngine {
                     }
                 }
                 Log(recorder)
+                try audioConfig.setRecordSession()
                 try recorder!.record()
             }
         } catch {
