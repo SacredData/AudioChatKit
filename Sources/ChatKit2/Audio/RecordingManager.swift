@@ -12,7 +12,7 @@ import AVFoundation
 public class RecordingManager: ObservableObject, HasAudioEngine {
     //private var engineMan: AudioEngineManager = .shared
     private var audioConfig: AudioConfigHelper = .shared
-    //private var audioCalcs: AudioCalculations = .shared
+    public var audioCalcs: AudioCalculations = .shared
     private var encodingMan: EncodingManager = EncodingManager()
     public var engine: AudioKit.AudioEngine
     public var inputNode: AudioEngine.InputNode?
@@ -20,8 +20,18 @@ public class RecordingManager: ObservableObject, HasAudioEngine {
     public var audioSession: AVAudioSession = AVAudioSession.sharedInstance()
     
     var durationAnchor: Double = 0.0
-    var currentDuration: TimeInterval = 0.0
-    @Published public var durationString: String?
+    var currentDuration: TimeInterval = 0.0 {
+        didSet {
+            DispatchQueue.main.async {
+                self.durationString = TimeHelper().formatDuration(duration: self.currentDuration)
+            }
+        }
+    }
+    @Published public var durationString: String? {
+        didSet {
+            Log(durationString)
+        }
+    }
     @Published var hasRecordPermissions: Bool?
     
     public init() {
@@ -51,14 +61,14 @@ public class RecordingManager: ObservableObject, HasAudioEngine {
                     Log(engine.avEngine.isRunning)
                 }
                 recorder = try NodeRecorder(node: i, shouldCleanupRecordings: true) { floats, time in
+                    DispatchQueue.global(qos: .userInteractive).async {
+                        self.audioCalcs.updateDbArray(floats)
+                    }
                     let timeSec = AVAudioTime.seconds(forHostTime: time.hostTime)
                     if self.durationAnchor == 0.0 {
                         self.durationAnchor = timeSec
                     } else {
                         self.currentDuration = timeSec - self.durationAnchor
-                    }
-                    DispatchQueue.main.async {
-                        self.durationString = TimeHelper().formatDuration(duration: self.currentDuration)
                     }
                     // TODO: Route buffer output to opus encoder!
                     /*
