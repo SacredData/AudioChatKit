@@ -19,7 +19,7 @@ will be required to go through code review via GitHub pull request.
 
 ## Usage Guide
 
-### Types
+### Types Implemented
 #### Dates & Times
 | Use Case | Type |
 |----------------------------------|------|
@@ -34,6 +34,21 @@ will be required to go through code review via GitHub pull request.
 |Audio recorder | [`AudioKit.NodeRecorder`](https://www.audiokit.io/AudioKit/documentation/audiokit/noderecorder)|
 |Mixer | [`AudioKit.Mixer`](https://www.audiokit.io/AudioKit/documentation/audiokit/mixer)|
 |Playback tap | [`AudioKit.RawDataTap`](https://www.audiokit.io/AudioKit/documentation/audiokit/audioplayer)|
+|Record tap| [`AudioKit.AmpltidueTap`](https://www.audiokit.io/AudioKit/documentation/audiokit/amplitudetap)|
+
+### Data Models Implemented
+#### Structs
+| Model          | Source File |
+|----------------|--------------|
+|`Message`       | [`Models/Message.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/Message.swift)|
+|`Transcript`    | [`Models/Transcript.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/Transcript.swift)|
+#### Enums
+| Enum           | Source File |
+|----------------|-------------|
+|`AudioFormats` | [`Models/AudioFormats.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/AudioFormats.swift)|
+|`AudioKitSettings` | [`Models/AudioKitSettings.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/AudioKitSettings.swift)|
+|`PlaybackEvents`| [`Models/PlaybackEvents.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/PlaybackEvents.swift)|
+|`PlaybackState` | [`Models/PlaybackState.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/PlaybackState.swift)|
 
 ### Setup
 > Always do these things first!
