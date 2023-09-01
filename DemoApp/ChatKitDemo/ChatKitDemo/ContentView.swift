@@ -16,6 +16,8 @@ struct ContentView: View {
         didSet {
             if isPlaying {
                 try! audioConductor.playerMan.newLocalMessage(msg: msg)
+            } else {
+                audioConductor.playerMan.pause()
             }
         }
     }
