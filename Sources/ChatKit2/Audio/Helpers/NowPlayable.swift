@@ -136,7 +136,8 @@ extension NowPlayable {
         var nowPlayingInfo = nowPlayingInfoCenter.nowPlayingInfo ?? [String: Any]()
         
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = metadata.duration
-        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = metadata.position
+        nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = metadata.elapsed
+        nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackProgress] = metadata.position
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = metadata.rate
         nowPlayingInfo[MPNowPlayingInfoPropertyDefaultPlaybackRate] = 1.0
         nowPlayingInfo[MPNowPlayingInfoPropertyCurrentLanguageOptions] = metadata.currentLanguageOptions
