@@ -17,6 +17,19 @@ changed.
 All changes to this library, once implemented into Chat by Storyboard for iOS,
 will be required to go through code review via GitHub pull request.
 
+## Features
+
+- [x] Automated `AVAudioEngine` and `AVAudioSession` configuration management
+- [x] Data models for Storyboard's defined product entities
+- [x] Audio playback with full `NowPlayable` and `RemoteCommandCenter` support on iOS
+- [x] Audio recording node that works in the background and transcodes on-the-fly
+- [x] Playback and recording time tracking managed headlessly
+- [x] Audio output processing that enhances speech clarity
+- [ ] Audio input processing that reduces file size and improves transcription quality (in progress)
+- [x] Properly-threaded audio routines that never exceed 15% CPU
+- [x] Audio downloading and asset caching modules that enable offline playback
+- [x] Support for AirPlay and AirPlay 2
+
 ## Usage Guide
 
 ### Types Implemented
