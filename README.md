@@ -13,9 +13,29 @@ our application's business requirements such that new standards must now be
 achieved, or because Apple's own internal standards/requirements have been
 changed.
 
+### VIPER Architecture
+ChatKit2 pursues the only logic iOS app architecture suitable for a real-time,
+offline-first audio messaging use case: [**VIPER**](https://www.kodeco.com/8440907-getting-started-with-the-viper-architecture-pattern).
+
+Successful deployment of ChatKit2 will depend upon the implementer's discipline
+to retain this app architecture and to consider it a primary design goal.
+
 ### Development
 All changes to this library, once implemented into Chat by Storyboard for iOS,
 will be required to go through code review via GitHub pull request.
+
+## Features
+
+- [x] Automated `AVAudioEngine` and `AVAudioSession` configuration management
+- [x] Data models for Storyboard's defined product entities
+- [x] Audio playback with full `NowPlayable` and `RemoteCommandCenter` support on iOS
+- [x] Audio recording node that works in the background and transcodes on-the-fly
+- [x] Playback and recording time tracking managed headlessly
+- [x] Audio output processing that enhances speech clarity
+- [ ] Audio input processing that reduces file size and improves transcription quality (in progress)
+- [x] Properly-threaded audio routines that never exceed 15% CPU
+- [x] Audio downloading and asset caching modules that enable offline playback
+- [x] Support for AirPlay and AirPlay 2
 
 ## Usage Guide
 
