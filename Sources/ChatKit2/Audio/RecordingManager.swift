@@ -87,6 +87,24 @@ public class RecordingManager: ObservableObject, HasAudioEngine {
         }
     }
     
+    public func stopRecorder() {
+        if let r = recorder {
+            if r.isRecording {
+                r.stop()
+            }
+        }
+    }
+    
+    public func pauseResumeRecorder() {
+        if let r = recorder {
+            if r.isRecording {
+                r.pause()
+            } else if r.isPaused {
+                r.resume()
+            }
+        }
+    }
+
     private func getPermissions() {
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             DispatchQueue.main.async {

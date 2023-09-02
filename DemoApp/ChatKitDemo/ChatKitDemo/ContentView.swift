@@ -5,6 +5,7 @@
 //  Created by Andrew Grathwohl on 8/29/23.
 //
 
+import AudioKit
 import ChatKit2
 import SwiftUI
 
@@ -15,8 +16,14 @@ struct ContentView: View {
     @Binding var isPlaying: Bool {
         didSet {
             if isPlaying {
-                try! audioConductor.recordMan.start()
-                try! audioConductor.recordMan.createRecorder()
+                audioConductor.recordMan.start()
+                audioConductor.recordMan.createRecorder()
+            } else {
+                audioConductor.recordMan.stopRecorder()
+                let msg = Message(audioFile: (audioConductor.recordMan.recorder?.audioFile)!, author: nil)
+                Log("Made Message from audio recording")
+                Log(msg)
+                Log(msg.duration)
             }
         }
     }
