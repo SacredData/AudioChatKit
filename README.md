@@ -13,6 +13,13 @@ our application's business requirements such that new standards must now be
 achieved, or because Apple's own internal standards/requirements have been
 changed.
 
+### VIPER Architecture
+ChatKit2 pursues the only logic iOS app architecture suitable for a real-time,
+offline-first audio messaging use case: [**VIPER**](https://www.kodeco.com/8440907-getting-started-with-the-viper-architecture-pattern).
+
+Successful deployment of ChatKit2 will depend upon the implementer's discipline
+to retain this app architecture and to consider it a primary design goal.
+
 ### Development
 All changes to this library, once implemented into Chat by Storyboard for iOS,
 will be required to go through code review via GitHub pull request.
