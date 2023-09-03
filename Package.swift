@@ -21,9 +21,7 @@ let package = Package(
         .package(
             url: "https://github.com/AudioKit/AudioKitEX.git",
             .upToNextMajor(from: "5.6.0")),
-        .package(
-            url: "https://github.com/ggerganov/whisper.spm.git",
-            branch: "master"),
+        .package(url: "https://github.com/exPHAT/SwiftWhisper.git", branch: "master"),
         .package(
             url: "https://github.com/alta/swift-opus.git",
             .upToNextMajor(from: "0.0.2")),
@@ -38,7 +36,7 @@ let package = Package(
             name: "ChatKit2",
             dependencies: ["AudioKit", // for almost all the audio stuff
                            "AudioKitEX",
-                           .product(name: "whisper", package: "whisper.spm"), // Whisper.cpp
+                           .byName(name: "SwiftWhisper"),
                            .product(name: "Opus", package: "swift-opus"), // for pcm -> opus packet encoding
                            .product(name: "SwiftOGG", package: "swift-ogg") // for conversion from m4a -> opus
             ]),
