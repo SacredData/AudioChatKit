@@ -54,6 +54,7 @@ public class RecordingManager: ObservableObject, HasAudioEngine {
                 inputNode = i
                 getPermissions()
                 let silencer = Fader(inputNode!, gain: 0)
+                silencer.mixToMono = true
                 let mixer = Mixer([silencer])
                 engine.output = mixer
                 if !engine.avEngine.isRunning {

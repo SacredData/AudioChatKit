@@ -5,8 +5,21 @@
 //  Created by Andrew Grathwohl on 9/3/23.
 //
 
+import AudioKit
 import Foundation
 import SwiftWhisper
+
+public class Whisperer {
+    let fileDir: URL = FileManager.default.urls(for: .documentDirectory,
+                                                in: .userDomainMask).first!
+    let modelPath: URL
+    
+    public init() {
+        modelPath = fileDir.appendingPathComponent("ggml-tiny.bin")
+        let whisper = Whisper(fromFileURL: modelPath)
+        Log(whisper)
+    }
+}
 
 protocol WhisperDelegate {
   // Progress updates as a percentage from 0-1

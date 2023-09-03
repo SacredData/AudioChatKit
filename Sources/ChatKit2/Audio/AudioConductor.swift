@@ -13,6 +13,7 @@ public class AudioConductor: ObservableObject, HasAudioEngine {
     public let engineMan: AudioEngineManager = .shared
     public let playerMan: PlaybackManager = PlaybackManager()
     public let recordMan: RecordingManager = RecordingManager()
+    public let whisperMan: Whisperer = Whisperer()
 
     public let engine: AudioEngine
     let session: AVAudioSession
