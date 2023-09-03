@@ -30,6 +30,8 @@ will be required to go through code review via GitHub pull request.
 - [x] Data models for Storyboard's defined product entities
 - [x] Audio playback with full `NowPlayable` and `RemoteCommandCenter` support on iOS
 - [x] Audio recording node that works in the background and transcodes on-the-fly
+- [x] Provides **real-time `whisper.cpp` transcription** of audio recording sessions and bulk transcription of audio files
+- [ ] CoreML Support for Whisper model (in progress)
 - [x] Playback and recording time tracking managed headlessly
 - [x] Audio output processing that enhances speech clarity
 - [ ] Audio input processing that reduces file size and improves transcription quality (in progress)
