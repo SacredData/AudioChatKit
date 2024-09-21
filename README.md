@@ -1,8 +1,10 @@
-# ChatKit2
-> Storyboard's iOS audio toolkit
+# AudioChatKit2
+
+> A Swifty iOS audio toolkit providing best-practices for difficult audio communication operations.
 
 ## About
-ChatKit2 is a Swift Package meant to establish and solidify important audio
+
+AudioAudioChatKit2 is a Swift Package meant to establish and solidify important audio
 standards that our app must follow to be [`NowPlayable`][np]. In so-doing, we setup
 the iOS app developers for success by removing the need to maintain a thorough
 understanding of the Apple ecosystem's intense audio implementation requirements.
@@ -14,13 +16,15 @@ achieved, or because Apple's own internal standards/requirements have been
 changed.
 
 ### VIPER Architecture
-ChatKit2 pursues the only logic iOS app architecture suitable for a real-time,
+
+AudioChatKit2 pursues the only logic iOS app architecture suitable for a real-time,
 offline-first audio messaging use case: [**VIPER**](https://www.kodeco.com/8440907-getting-started-with-the-viper-architecture-pattern).
 
-Successful deployment of ChatKit2 will depend upon the implementer's discipline
+Successful deployment of AudioChatKit2 will depend upon the implementer's discipline
 to retain this app architecture and to consider it a primary design goal.
 
 ### Development
+
 All changes to this library, once implemented into Chat by Storyboard for iOS,
 will be required to go through code review via GitHub pull request.
 
@@ -42,37 +46,46 @@ will be required to go through code review via GitHub pull request.
 ## Usage Guide
 
 ### Types Implemented
+
 #### Dates & Times
-| Use Case | Type |
-|----------------------------------|------|
-|Audio message duration            | [`TimeInterval`](https://developer.apple.com/documentation/foundation/timeinterval)|
-|Message creation date      | [`ISO8601DateFormatter`](https://developer.apple.com/documentation/foundation/iso8601dateformatter)|
-|Playback progress tracking  | [`AVAudioTime`](https://developer.apple.com/documentation/avfaudio/avaudiotime)|
+
+| Use Case                   | Type                                                                                                |
+| -------------------------- | --------------------------------------------------------------------------------------------------- |
+| Audio message duration     | [`TimeInterval`](https://developer.apple.com/documentation/foundation/timeinterval)                 |
+| Message creation date      | [`ISO8601DateFormatter`](https://developer.apple.com/documentation/foundation/iso8601dateformatter) |
+| Playback progress tracking | [`AVAudioTime`](https://developer.apple.com/documentation/avfaudio/avaudiotime)                     |
+
 #### Audio Nodes
-| Use Case | Type |
-|------------------|------|
-|Audio engine  | [`AudioKit.AudioEngine`](https://www.audiokit.io/AudioKit/documentation/audiokit/audioengine)|
-|Audio player | [`AudioKit.AudioPlayer`](https://www.audiokit.io/AudioKit/documentation/audiokit/audioplayer)|
-|Audio recorder | [`AudioKit.NodeRecorder`](https://www.audiokit.io/AudioKit/documentation/audiokit/noderecorder)|
-|Mixer | [`AudioKit.Mixer`](https://www.audiokit.io/AudioKit/documentation/audiokit/mixer)|
-|Playback tap | [`AudioKit.RawDataTap`](https://www.audiokit.io/AudioKit/documentation/audiokit/audioplayer)|
-|Record tap| [`AudioKit.AmpltidueTap`](https://www.audiokit.io/AudioKit/documentation/audiokit/amplitudetap)|
+
+| Use Case       | Type                                                                                            |
+| -------------- | ----------------------------------------------------------------------------------------------- |
+| Audio engine   | [`AudioKit.AudioEngine`](https://www.audiokit.io/AudioKit/documentation/audiokit/audioengine)   |
+| Audio player   | [`AudioKit.AudioPlayer`](https://www.audiokit.io/AudioKit/documentation/audiokit/audioplayer)   |
+| Audio recorder | [`AudioKit.NodeRecorder`](https://www.audiokit.io/AudioKit/documentation/audiokit/noderecorder) |
+| Mixer          | [`AudioKit.Mixer`](https://www.audiokit.io/AudioKit/documentation/audiokit/mixer)               |
+| Playback tap   | [`AudioKit.RawDataTap`](https://www.audiokit.io/AudioKit/documentation/audiokit/audioplayer)    |
+| Record tap     | [`AudioKit.AmpltidueTap`](https://www.audiokit.io/AudioKit/documentation/audiokit/amplitudetap) |
 
 ### Data Models Implemented
+
 #### Structs
-| Model          | Source File |
-|----------------|--------------|
-|`Message`       | [`Models/Message.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/Message.swift)|
-|`Transcript`    | [`Models/Transcript.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/Transcript.swift)|
+
+| Model        | Source File                                                                                                                           |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `Message`    | [`Models/Message.swift`](https://github.com/sacreddata/AudioChatKit/blob/main/Sources/AudioChatKit2/Audio/Models/Message.swift)       |
+| `Transcript` | [`Models/Transcript.swift`](https://github.com/sacreddata/AudioChatKit/blob/main/Sources/AudioChatKit2/Audio/Models/Transcript.swift) |
+
 #### Enums
-| Enum           | Source File |
-|----------------|-------------|
-|`AudioFormats` | [`Models/AudioFormats.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/AudioFormats.swift)|
-|`AudioKitSettings` | [`Models/AudioKitSettings.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/AudioKitSettings.swift)|
-|`PlaybackEvents`| [`Models/PlaybackEvents.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/PlaybackEvents.swift)|
-|`PlaybackState` | [`Models/PlaybackState.swift`](https://github.com/Storyboard-fm/ChatKit/blob/main/Sources/ChatKit2/Audio/Models/PlaybackState.swift)|
+
+| Enum               | Source File                                                                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AudioFormats`     | [`Models/AudioFormats.swift`](https://github.com/sacreddata/AudioChatKit/blob/main/Sources/AudioChatKit2/Audio/Models/AudioFormats.swift)         |
+| `AudioKitSettings` | [`Models/AudioKitSettings.swift`](https://github.com/sacreddata/AudioChatKit/blob/main/Sources/AudioChatKit2/Audio/Models/AudioKitSettings.swift) |
+| `PlaybackEvents`   | [`Models/PlaybackEvents.swift`](https://github.com/sacreddata/AudioChatKit/blob/main/Sources/AudioChatKit2/Audio/Models/PlaybackEvents.swift)     |
+| `PlaybackState`    | [`Models/PlaybackState.swift`](https://github.com/sacreddata/AudioChatKit/blob/main/Sources/AudioChatKit2/Audio/Models/PlaybackState.swift)       |
 
 ### Setup
+
 > Always do these things first!
 
 **Immediately after app launch** create an instance of `AudioConfigHelper` inside the app's `init()` function.
@@ -112,30 +125,35 @@ struct AViewOfSomeKind: View {
 By doing this you now have access to all audio features provided by `AudioKit`.
 
 #### Starting and Stopping `AudioConductor`
-***DON'T DO IT***
+
+**_DON'T DO IT_**
 
 We implement automated start/stop functionality inside the classes so you don't
 have to manage these concerns in the first place.
 
 ### Using the `PlaybackManager`
+
 The best way to access and utilize our playback tools is via `AudioConductor.playerMan`.
 
 You must utilize this manager in order to get access to the class-managed timing
 metadata needed for UI relating to playback progress.
 
-***NEVER use a `Timer` or `Date` to do anything related to playback time
-tracking!!*** Instead, read on to learn how to access the class-managed values.
+**_NEVER use a `Timer` or `Date` to do anything related to playback time
+tracking!!_** Instead, read on to learn how to access the class-managed values.
 
 #### Time Metadata for UI
+
 ##### Formatted Time String
+
 > For publishing real-time seconds elapsed to UI
 
-We publish time elapsed in seconds at [`PlaybackManager.currentTimeString`](https://github.com/Storyboard-fm/ChatKit/blob/341a4cef5cd8133b9d29391c32722c68f42e1566/Sources/ChatKit2/Audio/PlaybackManager.swift#L33).
+We publish time elapsed in seconds at [`PlaybackManager.currentTimeString`](https://github.com/sacreddata/AudioChatKit/blob/341a4cef5cd8133b9d29391c32722c68f42e1566/Sources/AudioChatKit2/Audio/PlaybackManager.swift#L33).
 
 ##### Progress Float
+
 > For use in SwiftUI as a `CGFloat`
 
-We also publish the float used to increment playback progress at [`PlaybackManager.currentProgress`](https://github.com/Storyboard-fm/ChatKit/blob/341a4cef5cd8133b9d29391c32722c68f42e1566/Sources/ChatKit2/Audio/PlaybackManager.swift#L27).
+We also publish the float used to increment playback progress at [`PlaybackManager.currentProgress`](https://github.com/sacreddata/AudioChatKit/blob/341a4cef5cd8133b9d29391c32722c68f42e1566/Sources/AudioChatKit2/Audio/PlaybackManager.swift#L27).
 
 ## Examples
 
@@ -162,6 +180,5 @@ Log(conductor.playerMan.nowPlayableMessage.audioFile.duration)
 Log(conductor.playerMan.nowPlayableMessage.author)
 Log(conductor.playerMan.nowPlayableMessage.staticMetadata)
 ```
-
 
 [np]: https://developer.apple.com/documentation/mediaplayer/becoming_a_now_playable_app

@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "ChatKit2",
+    name: "AudioChatKit2",
     platforms: [
        .iOS(.v15)
     ],
